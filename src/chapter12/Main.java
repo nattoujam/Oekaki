@@ -22,9 +22,14 @@ public class Main {
                 frame.setLocationRelativeTo(null);
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 
-                MouseDraw mm = new MouseDraw();
+                DrawPanel drawPanel = new DrawPanel();
+                
+                //Thread thread = new Thread(drawPanel);
+                //thread.start();
  
-                frame.getContentPane().add(mm);
+                frame.add(drawPanel);
+                
+                //frame.getContentPane().add(drawPanel);
                 frame.setVisible(true);
             }
         });

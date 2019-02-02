@@ -5,6 +5,9 @@
  */
 package chapter12;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.event.MouseMotionListener;
 import javax.swing.JPanel;
 
 /**
@@ -12,14 +15,16 @@ import javax.swing.JPanel;
  * @author local-nattou
  */
 public class DrawPanel extends JPanel {
-    private MouseMove mv;
-    private DrawComponent drawcomponent;
+    private final DrawComponent drawComponent;
+    private final MouseMotionListener mv;
     
     public DrawPanel() {
-        mv = new MouseMove();
-        drawcomponent = new DrawComponent();
+        drawComponent = new DrawComponent();
+        mv = new MouseMove(drawComponent);
         addMouseMotionListener(mv);
+        
+        this.setLayout(new BorderLayout());
+        this.add(drawComponent, BorderLayout.CENTER);
+        //this.setBackground(Color.LIGHT_GRAY);
     }
-    
-    
 }
