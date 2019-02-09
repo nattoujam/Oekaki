@@ -16,15 +16,16 @@ import javax.swing.JPanel;
  */
 public class DrawPanel extends JPanel {
     private final DrawComponent drawComponent;
-    private final MouseMotionListener mv;
+    private final MouseMove mv;
     
-    public DrawPanel() {
-        drawComponent = new DrawComponent();
+    public DrawPanel(int width, int height/*, Palette p*/) {
+        this.setSize(width, height);
+        drawComponent = new DrawComponent(this.getWidth(), this.getHeight()/*, p*/);
         mv = new MouseMove(drawComponent);
         addMouseMotionListener(mv);
+        addMouseListener(mv);
         
         this.setLayout(new BorderLayout());
         this.add(drawComponent, BorderLayout.CENTER);
-        //this.setBackground(Color.LIGHT_GRAY);
     }
 }

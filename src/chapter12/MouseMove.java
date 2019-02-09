@@ -28,7 +28,7 @@ public class MouseMove implements MouseMotionListener, MouseListener{
     //MouseMotionListener
     @Override
     public void mouseDragged(MouseEvent e) {
-        dCom.SetDrawPoint(new Point(e.getX(),e.getY()));
+        dCom.drawPoint(new Point(e.getX(),e.getY()));
     }
 
     @Override
@@ -39,26 +39,22 @@ public class MouseMove implements MouseMotionListener, MouseListener{
     //MouseLisetener
     @Override
     public void mouseClicked(MouseEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        dCom.startDraw(new Point(e.getX(), e.getY()));
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

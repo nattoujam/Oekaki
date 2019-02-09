@@ -5,6 +5,7 @@
  */
 package chapter12;
 
+import java.awt.BorderLayout;
 import javax.swing.*;
 
 /**
@@ -13,25 +14,27 @@ import javax.swing.*;
  */
 public class Main {
     public static void main(String args[]) {
-        SwingUtilities.invokeLater(new Runnable() {
- 
-            @Override
-            public void run() {
+        SwingUtilities.invokeLater(() -> {
                 final JFrame frame = new JFrame();
                 frame.setBounds(100, 100, 400, 300);
                 frame.setLocationRelativeTo(null);
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                frame.setLayout(null);
                 
-                DrawPanel drawPanel = new DrawPanel();
+                //Palette palette = new Palette();
+                //palette.setBounds(0, 0, 300, 50);
+                
+                JPanel drawPanel = new DrawPanel(200, 200/*, palette*/);
+                drawPanel.setLocation(50, 50);
                 
                 //Thread thread = new Thread(drawPanel);
                 //thread.start();
- 
+                
+                //frame.add(palette);
                 frame.add(drawPanel);
                 
                 //frame.getContentPane().add(drawPanel);
                 frame.setVisible(true);
-            }
         });
     }
     
