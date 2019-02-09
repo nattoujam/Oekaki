@@ -5,30 +5,35 @@
  */
 package chapter12;
 
-
-import java.awt.Graphics;
+import java.awt.Color;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.util.ArrayList;
-import javax.swing.JComponent;
+import java.util.HashSet;
 
 /**
  *
  * @author local-nattou
  */
-public class MouseMove implements MouseMotionListener, MouseListener{
+public class Drawer implements MouseMotionListener, MouseListener {
     private final DrawComponent dCom; 
+    private Pen pen;
     
-    public MouseMove(DrawComponent d) {
-        dCom = d;
+    public Drawer(DrawComponent d) {
+        this.dCom = d;
+        this.pen = new CirclePen();
+    }
+    
+    public void setPen(Pen p) {
+        this.pen = p;
     }
     
     //MouseMotionListener
     @Override
     public void mouseDragged(MouseEvent e) {
-        dCom.drawPoint(new Point(e.getX(),e.getY()));
+        pen.draw(e.getPoint());
+        dCom.repaint();
     }
 
     @Override
@@ -43,7 +48,7 @@ public class MouseMove implements MouseMotionListener, MouseListener{
 
     @Override
     public void mousePressed(MouseEvent e) {
-        dCom.startDraw(new Point(e.getX(), e.getY()));
+        pen.penInit(dCom.getGraphics2D(), e.getPoint());
     }
 
     @Override

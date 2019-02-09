@@ -24,7 +24,7 @@ public class Main {
                 //Palette palette = new Palette();
                 //palette.setBounds(0, 0, 300, 50);
                 
-                JPanel drawPanel = new DrawPanel(200, 200/*, palette*/);
+                JPanel drawPanel = new DrawPanel(200, 200);
                 drawPanel.setLocation(50, 50);
                 
                 //Thread thread = new Thread(drawPanel);
