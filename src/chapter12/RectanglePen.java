@@ -16,8 +16,13 @@ import java.awt.Stroke;
 public class RectanglePen extends Pen {
 
     @Override
+    public String toString() {
+        return "RectanglePen";
+    }
+    
+    @Override
     protected void penDraw(Point p) {
-        g2D.fillRect(p.x - radius, p.y - radius, radius * 2, radius * 2);
+        g2D.fillRect(p.x - radius, p.y - radius, radius * 4, radius * 2);
     }
     
 }

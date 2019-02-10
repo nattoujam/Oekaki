@@ -16,6 +16,11 @@ import java.awt.Stroke;
 public class CirclePen extends Pen {
 
     @Override
+    public String toString() {
+        return "CirclePen";
+    }
+    
+    @Override
     protected void penDraw(Point p) {
         g2D.fillOval(p.x - radius, p.y - radius, radius * 2, radius * 2);
     }

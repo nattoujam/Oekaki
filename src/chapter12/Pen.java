@@ -42,6 +42,10 @@ public abstract class Pen {
         this.radius = r;
     }
     
+    //名前を決める
+    @Override
+    public abstract String toString();
+    
     //ラインの描き方
     protected abstract void penDraw(Point p);
     

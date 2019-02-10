@@ -21,10 +21,10 @@ public class Main {
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 frame.setLayout(null);
                 
-                //Palette palette = new Palette();
-                //palette.setBounds(0, 0, 300, 50);
-                
                 Drawer drawer = new Drawer();
+                
+                Palette palette = new Palette(drawer);
+                palette.setBounds(0, 0, 300, 50);
                 
                 DrawPanel drawPanel = new DrawPanel(200, 200, drawer);
                 drawPanel.setLocation(50, 50);
@@ -33,8 +33,8 @@ public class Main {
                 //Thread thread = new Thread(drawPanel);
                 //thread.start();
                 
-                //frame.add(palette);
                 frame.add(drawPanel);
+                frame.add(palette);
                 
                 //frame.getContentPane().add(drawPanel);
                 frame.setVisible(true);
