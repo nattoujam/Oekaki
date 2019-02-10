@@ -16,17 +16,30 @@ import javax.swing.JPanel;
  * @author local-nattou
  */
 public class DrawPanel extends JPanel {
-    private final DrawComponent drawComponent;
-    private final Drawer d;
+    private final DrawComponent dCom;
+    private final MouseInput mi;
     
-    public DrawPanel(int width, int height) {
+    public DrawPanel(int width, int height, Drawer d) {
         this.setSize(width, height);
-        this.drawComponent = new DrawComponent(this.getWidth(), this.getHeight());
-        this.d = new Drawer(drawComponent);
-        this.addMouseMotionListener(d);
-        this.addMouseListener(d);
-        
         this.setLayout(new BorderLayout());
-        this.add(drawComponent, BorderLayout.CENTER);
+        
+        this.dCom = new DrawComponent(this.getWidth(), this.getHeight());
+        d.setDrawComponent(dCom);
+        this.add(dCom, BorderLayout.CENTER);
+        
+        this.mi = new MouseInput(d);
+        
+    }
+    
+    //マウス受付の切り替え
+    public void changeMauseInputReception(boolean b) {
+        if(b) {
+            this.addMouseMotionListener(mi);
+            this.addMouseListener(mi);
+        }
+        else {
+            this.removeMouseMotionListener(mi);
+            this.removeMouseListener(mi);
+        }
     }
 }

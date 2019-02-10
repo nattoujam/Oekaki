@@ -16,50 +16,32 @@ import java.util.HashSet;
  *
  * @author local-nattou
  */
-public class Drawer implements MouseMotionListener, MouseListener {
-    private final DrawComponent dCom; 
+public class Drawer {
+    private DrawComponent dCom; 
     private Pen pen;
     
-    public Drawer(DrawComponent d) {
-        this.dCom = d;
+    public Drawer() {
         this.pen = new CirclePen();
     }
     
+    //描画場所
+    public void setDrawComponent(DrawComponent d) {
+        this.dCom = d;
+    }
+    
+    //使うペン
     public void setPen(Pen p) {
         this.pen = p;
     }
     
-    //MouseMotionListener
-    @Override
-    public void mouseDragged(MouseEvent e) {
-        pen.draw(e.getPoint());
+    //描画準備メソッドの実行
+    public void prepareDrawing(Point p) {
+        pen.penInit(dCom.getGraphics2D(), p);
+    }
+    
+    //軌跡描画メソッドの実行
+    public void doDrawing(Point p) {
+        pen.draw(p);
         dCom.repaint();
-    }
-
-    @Override
-    public void mouseMoved(MouseEvent e) {
-        
-    }
-
-    //MouseLisetener
-    @Override
-    public void mouseClicked(MouseEvent e) {
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-        pen.penInit(dCom.getGraphics2D(), e.getPoint());
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
     }
 }

@@ -24,8 +24,11 @@ public class Main {
                 //Palette palette = new Palette();
                 //palette.setBounds(0, 0, 300, 50);
                 
-                JPanel drawPanel = new DrawPanel(200, 200);
+                Drawer drawer = new Drawer();
+                
+                DrawPanel drawPanel = new DrawPanel(200, 200, drawer);
                 drawPanel.setLocation(50, 50);
+                drawPanel.changeMauseInputReception(true);
                 
                 //Thread thread = new Thread(drawPanel);
                 //thread.start();
