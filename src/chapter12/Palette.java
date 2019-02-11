@@ -22,9 +22,9 @@ import javax.swing.JPanel;
  * @author local-nattou
  */
 public class Palette extends JPanel {
-    private Pen pen;
+    private Pen pen = new CirclePen();
+    private Color color = Color.BLACK;
     private final Drawer drawer;
-    private final JComboBox penTypeSelecter;
   
     public Palette(Drawer d) {
         GridLayout layout = new GridLayout(2, createPenButtons() + 1);
@@ -35,11 +35,16 @@ public class Palette extends JPanel {
         this.setLayout(layout);
         
         this.drawer = d;
-        penTypeSelecter = createComboBox();
+        createComboBox();
     }
     
     public Pen getSelectedPen() {
         return this.pen;
+    }
+    
+    private void updatePen() {
+        pen.setColor(color);
+        drawer.setPen(pen);
     }
     
     private int createPenButtons() {
@@ -62,8 +67,8 @@ public class Palette extends JPanel {
         
         for(PenButton p : list) {
             p.addActionListener(e -> {
-                pen.setColor((p.getColor()));
-                drawer.setPen(pen);
+                color = p.getColor();
+                updatePen();
                 System.out.println(p.getColor());
             });
             this.add(p);
@@ -81,7 +86,7 @@ public class Palette extends JPanel {
         JComboBox cb = new JComboBox(pens);
         cb.addItemListener(e -> {
             pen = (Pen)e.getItem();
-            drawer.setPen(pen);
+            updatePen();
         });
         cb.setSelectedIndex(0);
         
