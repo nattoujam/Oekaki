@@ -5,11 +5,13 @@
  */
 package chapter12;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.Vector;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 
@@ -18,40 +20,17 @@ import javax.swing.JToggleButton;
  * @author local-nattou
  */
 public class Palette extends JPanel {
-    private final ArrayList<PenButton> penButtons;
     private Pen pen = new CirclePen();
     private Color color = Color.BLACK;
     private int radius = 5;
     private final Drawer drawer;
   
     public Palette(Drawer d) {
-        penButtons = new ArrayList<>();
-        
-        //消しゴム
-        PenButton eraser = createPenButton(Color.WHITE);
-        eraser.setText("けしごむ");
-        eraser.setFocusPainted(false);
-        
-        //ペン色作成
-        PenButton black = createPenButton(Color.BLACK);
-        createPenButton(Color.RED);
-        createPenButton(Color.BLUE);
-        createPenButton(Color.GREEN);
-        createPenButton(Color.YELLOW);
-        
-        //初期色は黒
-        black.isPressed(true);
-        
-        GridLayout layout = new GridLayout(2, penButtons.size() + 2);
-        System.out.println(layout.getColumns());
-        System.out.println(layout.getRows());
-        layout.setVgap(5);
-        layout.setHgap(5);
-        this.setLayout(layout);
-        
         this.drawer = d;
-        createPenTypeSelecter();
-        createPenRadiusSelecter();
+        
+        this.setLayout(new BorderLayout(5, 0));
+        this.add(createColorPalette(), BorderLayout.CENTER);
+        this.add(createPenPanel(), BorderLayout.EAST);
     }
     
     public Pen getSelectedPen() {
@@ -64,30 +43,13 @@ public class Palette extends JPanel {
         drawer.setPen(pen);
     }
     
-    private PenButton createPenButton(Color c) {
-        PenButton p = new PenButton(c);
-        
-        penButtons.add(p);
-        p.addActionListener(e -> {
-            color = p.getColor();
-            updatePen();
-            System.out.println(p.getColor());
-            for(PenButton b : penButtons) {
-                b.isPressed(false);
-            }
-            p.isPressed(true);
-        });
-        this.add(p);
-        
-        return p;
-    }
-    
-    private int createPenButtons() {
+    private JPanel createColorPalette() {
+        JPanel panel = new JPanel();
         ArrayList<PenButton> list = new ArrayList<>();
         
         //消しゴム
         PenButton eraser = new PenButton(Color.WHITE);
-        eraser.setText("けしごむ");
+        eraser.setText("消");
         eraser.setFocusPainted(false);
         
         //ペン色の生成
@@ -96,6 +58,10 @@ public class Palette extends JPanel {
         PenButton blue = new PenButton(Color.BLUE);
         PenButton yellow = new PenButton(Color.YELLOW);
         PenButton green = new PenButton(Color.GREEN);
+        PenButton temp1 = new PenButton(Color.GREEN);
+        PenButton temp2 = new PenButton(Color.GREEN);
+        PenButton temp3 = new PenButton(Color.GREEN);
+        PenButton temp4 = new PenButton(Color.GREEN);
         
         //初期値は黒
         black.isPressed(true);
@@ -106,6 +72,10 @@ public class Palette extends JPanel {
         list.add(blue);
         list.add(yellow);
         list.add(green);
+        list.add(temp1);
+        list.add(temp2);
+        list.add(temp3);
+        list.add(temp4);
         
         for(PenButton p : list) {
             p.addActionListener(e -> {
@@ -117,13 +87,20 @@ public class Palette extends JPanel {
                 }
                 p.isPressed(true);
             });
-            this.add(p);
+            panel.add(p);
         }
         
-        return list.size();
+        GridLayout layout = new GridLayout(2, list.size() + 2);
+        System.out.println(layout.getColumns());
+        System.out.println(layout.getRows());
+        layout.setVgap(5);
+        layout.setHgap(5);
+        panel.setLayout(layout);
+        
+        return panel;
     }
     
-    private void createPenTypeSelecter() {
+    private JComboBox createPenTypeSelecter(JComponent place) {
         Vector<Pen> penTypes = new Vector<>();
         
         penTypes.add(new CirclePen());
@@ -136,10 +113,12 @@ public class Palette extends JPanel {
         });
         cb.setSelectedIndex(0);
         
-        this.add(cb);
+        place.add(cb);
+        
+        return cb;
     }
     
-    private void createPenRadiusSelecter() {
+    private JComboBox createPenRadiusSelecter(JComponent place) {
         Vector<Integer> penSizes = new Vector<>();
         
         penSizes.add(1);
@@ -155,6 +134,18 @@ public class Palette extends JPanel {
         });
         cb.setSelectedIndex(1);
         
-        this.add(cb);
+        place.add(cb);
+        
+        return cb;
+    }
+    
+    private JPanel createPenPanel() {
+        JPanel panel = new JPanel();
+        
+        panel.setLayout(new BorderLayout());
+        panel.add(createPenTypeSelecter(panel), BorderLayout.NORTH);
+        panel.add(createPenRadiusSelecter(panel), BorderLayout.SOUTH);
+        
+        return panel;
     }
 }

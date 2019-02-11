@@ -27,7 +27,7 @@ public class PenButton extends JButton{
         this.color = c;
         this.setBackground(c);
         on = new CompoundBorder(new LineBorder(new Color(255, 150, 150), 3), new LineBorder(Color.WHITE));
-        off = new CompoundBorder(new LineBorder(color), new LineBorder(color));
+        off = new CompoundBorder(new LineBorder(Color.BLACK), new LineBorder(color));
         this.setBorder(off);
     }
     
