@@ -5,7 +5,6 @@
  */
 package chapter12;
 
-import java.awt.BorderLayout;
 import javax.swing.*;
 
 /**

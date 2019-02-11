@@ -5,12 +5,7 @@
  */
 package chapter12;
 
-import java.awt.Color;
 import java.awt.Point;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.util.HashSet;
 
 /**
  *
@@ -37,6 +32,7 @@ public class Drawer {
     //描画準備メソッドの実行
     public void prepareDrawing(Point p) {
         pen.penInit(dCom.getGraphics2D(), p);
+        dCom.repaint();
     }
     
     //軌跡描画メソッドの実行

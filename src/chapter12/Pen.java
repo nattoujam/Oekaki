@@ -25,6 +25,7 @@ public abstract class Pen {
         this.previousPoint = first;
         
         g2D.setStroke(makeStroke());
+        penDraw(first);
     }
     
     public void draw(Point p) {
