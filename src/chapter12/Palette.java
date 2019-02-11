@@ -24,10 +24,11 @@ import javax.swing.JPanel;
 public class Palette extends JPanel {
     private Pen pen = new CirclePen();
     private Color color = Color.BLACK;
+    private int radius = 5;
     private final Drawer drawer;
   
     public Palette(Drawer d) {
-        GridLayout layout = new GridLayout(2, createPenButtons() + 1);
+        GridLayout layout = new GridLayout(2, createPenButtons() + 2);
         System.out.println(layout.getColumns());
         System.out.println(layout.getRows());
         layout.setVgap(5);
@@ -35,7 +36,8 @@ public class Palette extends JPanel {
         this.setLayout(layout);
         
         this.drawer = d;
-        createComboBox();
+        createPenTypeSelecter();
+        createPenRadiusSelecter();
     }
     
     public Pen getSelectedPen() {
@@ -44,6 +46,7 @@ public class Palette extends JPanel {
     
     private void updatePen() {
         pen.setColor(color);
+        pen.setRadius(radius);
         drawer.setPen(pen);
     }
     
@@ -77,7 +80,7 @@ public class Palette extends JPanel {
         return list.size();
     }
     
-    private JComboBox createComboBox() {
+    private void createPenTypeSelecter() {
         Vector<Pen> pens = new Vector<>();
         
         pens.add(new CirclePen());
@@ -91,7 +94,22 @@ public class Palette extends JPanel {
         cb.setSelectedIndex(0);
         
         this.add(cb);
+    }
+    
+    private void createPenRadiusSelecter() {
+        Vector<Integer> radiuses = new Vector<>();
         
-        return cb;
+        radiuses.add(5);
+        radiuses.add(10);
+        radiuses.add(20);
+        radiuses.add(30);
+        
+        JComboBox cb = new JComboBox(radiuses);
+        cb.addItemListener(e -> {
+            radius = (int)e.getItem();
+            updatePen();
+        });
+        
+        this.add(cb);
     }
 }
