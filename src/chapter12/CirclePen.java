@@ -24,4 +24,9 @@ public class CirclePen extends Pen {
     protected void penDraw(Point p) {
         g2D.fillOval(p.x - radius, p.y - radius, radius * 2, radius * 2);
     }
+
+    @Override
+    protected Stroke makeStroke() {
+        return new BasicStroke(radius * 2, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+    }
 }
