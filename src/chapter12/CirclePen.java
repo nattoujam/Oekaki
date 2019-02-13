@@ -16,7 +16,7 @@ import java.awt.Stroke;
 public class CirclePen extends Pen {
 
     @Override
-    public String toString() {
+    public String getName() {
         return "CirclePen";
     }
     

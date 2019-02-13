@@ -24,12 +24,12 @@ public abstract class Pen {
         this.g2D = g;
         this.previousPoint = first;
         
+        g2D.setColor(color);
         g2D.setStroke(makeStroke());
         penDraw(first);
     }
     
     public void draw(Point p) {
-        g2D.setColor(color);
         penDraw(p);
         manyPointComplement(p);
     }
@@ -42,9 +42,14 @@ public abstract class Pen {
         this.radius = r;
     }
     
-    //名前を決める
+    
     @Override
-    public abstract String toString();
+    public String toString() {
+        return getName();
+    }
+    
+    //名前を決める
+    public abstract String getName();
     
     //ストローク生成
     protected abstract Stroke makeStroke();

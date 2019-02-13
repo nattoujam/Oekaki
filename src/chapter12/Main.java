@@ -15,7 +15,7 @@ public class Main {
     public static void main(String args[]) {
         SwingUtilities.invokeLater(() -> {
                 final JFrame frame = new JFrame();
-                frame.setBounds(100, 100, 400, 300);
+                frame.setBounds(50, 50, 800, 600);
                 frame.setLocationRelativeTo(null);
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 frame.setLayout(null);
@@ -23,10 +23,10 @@ public class Main {
                 Drawer drawer = new Drawer();
                 
                 Palette palette = new Palette(drawer);
-                palette.setBounds(0, 0, 300, 50);
+                palette.setBounds(300, 505, 500, 45);
                 
-                DrawPanel drawPanel = new DrawPanel(200, 200, drawer);
-                drawPanel.setLocation(50, 50);
+                DrawPanel drawPanel = new DrawPanel(drawer);
+                drawPanel.setBounds(300, 0, 500, 500);
                 drawPanel.changeMauseInputReception(true);
                 
                 //Thread thread = new Thread(drawPanel);

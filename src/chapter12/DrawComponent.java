@@ -17,15 +17,14 @@ import javax.swing.JComponent;
  */
 public class DrawComponent extends JComponent {
 
-    private final BufferedImage buffer;
-    private final Graphics2D bg;
-
-    public DrawComponent(int width, int height) {
-        this.setSize(width, height);
-        buffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+    private BufferedImage buffer;
+    private Graphics2D bg;
+    
+    public void makeBufferedImage() {
+        buffer = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_RGB);
         bg = buffer.createGraphics();
         bg.setColor(Color.white);
-        bg.fillRect(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+        bg.fillRect(0, 0, buffer.getWidth(), buffer.getHeight());
     }
     
     public Graphics2D getGraphics2D() {
@@ -35,5 +34,6 @@ public class DrawComponent extends JComponent {
     @Override
     protected void paintComponent(Graphics g) {
         g.drawImage(buffer, this.getX(), this.getY(), this);
+        g.dispose();
     }
 }

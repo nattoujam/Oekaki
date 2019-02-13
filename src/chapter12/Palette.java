@@ -13,7 +13,6 @@ import java.util.Vector;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
-import javax.swing.JToggleButton;
 
 /**
  *

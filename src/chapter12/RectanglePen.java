@@ -16,7 +16,7 @@ import java.awt.Stroke;
 public class RectanglePen extends Pen {
 
     @Override
-    public String toString() {
+    public String getName() {
         return "RectanglePen";
     }
     
