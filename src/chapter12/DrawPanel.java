@@ -22,7 +22,7 @@ public class DrawPanel extends JPanel {
     
     public DrawPanel(Drawer d) {
         this.setBackground(Color.RED);
-        this.setLayout(new BorderLayout());
+        this.setLayout(new BorderLayout(0, 5));
         
         this.dCom = new DrawComponent();
         d.setDrawComponent(dCom);

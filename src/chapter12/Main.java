@@ -15,7 +15,7 @@ public class Main {
     public static void main(String args[]) {
         SwingUtilities.invokeLater(() -> {
                 final JFrame frame = new JFrame();
-                frame.setBounds(50, 50, 800, 600);
+                frame.setBounds(50, 50, 850, 650);
                 frame.setLocationRelativeTo(null);
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 frame.setLayout(null);
