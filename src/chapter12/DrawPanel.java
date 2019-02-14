@@ -6,9 +6,7 @@
 package chapter12;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.event.MouseMotionListener;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
