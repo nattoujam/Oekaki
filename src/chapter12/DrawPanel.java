@@ -21,7 +21,6 @@ public class DrawPanel extends JPanel {
     private final MouseInput mi;
     
     public DrawPanel(Drawer d) {
-        this.setBackground(Color.RED);
         this.setLayout(new BorderLayout(0, 5));
         
         this.dCom = new DrawComponent();
