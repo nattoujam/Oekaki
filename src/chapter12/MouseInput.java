@@ -14,12 +14,13 @@ import java.awt.event.MouseMotionListener;
  * @author local-nattou
  */
 public class MouseInput implements MouseMotionListener, MouseListener {
-    
+
     private Drawer d;
-    
+
     public MouseInput(Drawer d) {
         this.d = d;
     }
+
     //MouseMotionListener
     @Override
     public void mouseDragged(MouseEvent e) {
@@ -28,7 +29,7 @@ public class MouseInput implements MouseMotionListener, MouseListener {
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        
+
     }
 
     //MouseLisetener

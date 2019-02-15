@@ -12,19 +12,20 @@ import java.awt.Color;
  * @author local-nattou
  */
 public class UserData {
+
     public String name = "defaultName";
     public Color color = Color.black;
-    
+
     public UserData(String n, Color c) {
         this.name = n;
         this.color = c;
     }
-    
+
     public String getName() {
         return this.name;
     }
-    
+
     public Color getColor() {
         return this.color;
-    } 
+    }
 }

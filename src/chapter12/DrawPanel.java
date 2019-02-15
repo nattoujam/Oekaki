@@ -15,18 +15,19 @@ import javax.swing.JPanel;
  * @author local-nattou
  */
 public class DrawPanel extends JPanel {
+
     private final DrawComponent dCom;
     private final MouseInput mi;
-    
+
     public DrawPanel(Drawer d) {
         this.setLayout(new BorderLayout(0, 5));
-        
+
         this.dCom = new DrawComponent();
         d.setDrawComponent(dCom);
         this.add(dCom, BorderLayout.CENTER);
-        
+
         this.mi = new MouseInput(d);
-        
+
         JButton reset = new JButton("レイヤークリア");
         reset.setFocusPainted(false);
         reset.addActionListener(e -> {
@@ -35,11 +36,10 @@ public class DrawPanel extends JPanel {
         });
         this.add(reset, BorderLayout.SOUTH);
     }
-    
+
     //マウス受付の切り替え
-    public void changeMauseInputReception(boolean b)
-    {
-        if(b) {
+    public void changeMauseInputReception(boolean b) {
+        if (b) {
             this.addMouseMotionListener(mi);
             this.addMouseListener(mi);
         }
@@ -48,11 +48,11 @@ public class DrawPanel extends JPanel {
             this.removeMouseListener(mi);
         }
     }
-    
+
     @Override
     protected void paintComponent(Graphics g) {
         //System.out.println(dCom.getGraphics2D());
-        if(dCom.getGraphics2D() == null) {
+        if (dCom.getGraphics2D() == null) {
             dCom.makeBufferedImage();
         }
     }

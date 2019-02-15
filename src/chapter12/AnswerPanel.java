@@ -22,59 +22,58 @@ import javax.swing.text.*;
  * @author local-nattou
  */
 public class AnswerPanel extends JPanel {
-    
-    private final NoWrapJTextPane logArea;
+
+    private final JTextPane logArea;
     private JTextField answerArea;
     private final UserData myData;
     private final DefaultStyledDocument doc;
-    
+
     public AnswerPanel(UserData d) {
         this.setLayout(new BorderLayout(0, 5));
-        
+
         this.myData = d;
-        this.logArea = new NoWrapJTextPane();
+        this.logArea = new JTextPane();
         logArea.setEditable(false);
         StyleContext sc = new StyleContext();
         doc = new DefaultStyledDocument(sc);
         logArea.setDocument(doc);
-        
-        
+
         JScrollPane scrollPane = new JScrollPane(logArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setBorder(new EtchedBorder(EtchedBorder.LOWERED));
-        
+
         logAppend(new Date(), new UserData("GM", new Color(200, 0, 255)), "Welcome to \"おえか木\" !!");
-        
+
         JPanel inputArea = createInputTextField();
-        
+
         this.add(scrollPane, BorderLayout.CENTER);
         this.add(inputArea, BorderLayout.SOUTH);
     }
-    
+
     private JPanel createInputTextField() {
         JPanel p = new JPanel();
         p.setLayout(new BorderLayout(5, 0));
-        
+
         answerArea = new JTextField();
-        
+
         JButton sendButton = new JButton("送る");
         sendButton.addActionListener(new Action());
         answerArea.addActionListener(new Action());
-        
+
         p.add(answerArea, BorderLayout.CENTER);
         p.add(sendButton, BorderLayout.EAST);
-        
+
         return p;
     }
-    
-    //log追加
+
+    //ログテキスト追加
     public void logAppend(Object time, UserData d, String str) {
         SimpleDateFormat sdf = new SimpleDateFormat("[kk:mm.ss]");
-        
+
         SimpleAttributeSet attr = new SimpleAttributeSet();
-	StyleConstants.setForeground(attr, d.getColor());
-        
-        String log = sdf.format(time) + "<" + d.getName() + ">" + str + "\r\n"; 
-        
+        StyleConstants.setForeground(attr, d.getColor());
+
+        String log = sdf.format(time) + "<" + d.getName() + ">" + str + "\r\n";
+
         try {
             doc.insertString(doc.getLength(), log, attr);
         }
@@ -82,12 +81,14 @@ public class AnswerPanel extends JPanel {
             Logger.getLogger(AnswerPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     private class Action implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            if(answerArea.getText().equals("")) return;
+            if (answerArea.getText().equals("")) {
+                return;
+            }
             logAppend(e.getWhen(), myData, answerArea.getText());
             answerArea.setText("");
         }
