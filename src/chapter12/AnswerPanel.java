@@ -27,8 +27,11 @@ public class AnswerPanel extends JPanel {
     private JTextField answerArea;
     private final UserData myData;
     private final DefaultStyledDocument doc;
+    private final NetworkSender sender;
 
-    public AnswerPanel(UserData d) {
+    public AnswerPanel(UserData d, NetworkSender sender, NetworkInput input) {
+        this.sender = sender;
+        input.addHandler(LogPacket.class, p -> logAppend(p.getTime(), p.getUserData(), p.getLog()));
         this.setLayout(new BorderLayout(0, 5));
 
         this.myData = d;
@@ -66,7 +69,7 @@ public class AnswerPanel extends JPanel {
     }
 
     //ログテキスト追加
-    public void logAppend(Object time, UserData d, String str) {
+    private String logAppend(Object time, UserData d, String str) {
         SimpleDateFormat sdf = new SimpleDateFormat("[kk:mm.ss]");
 
         SimpleAttributeSet attr = new SimpleAttributeSet();
@@ -80,17 +83,22 @@ public class AnswerPanel extends JPanel {
         catch (BadLocationException ex) {
             Logger.getLogger(AnswerPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        return log;
     }
 
     private class Action implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (answerArea.getText().equals("")) {
+            String log = answerArea.getText();
+            if (log.equals("")) {
                 return;
             }
-            logAppend(e.getWhen(), myData, answerArea.getText());
+            logAppend(e.getWhen(), myData, log);
             answerArea.setText("");
+            Packet packet = new LogPacket(myData, e.getWhen(), log);
+            sender.Send(packet);
         }
     }
 }

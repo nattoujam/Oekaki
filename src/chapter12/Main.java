@@ -25,8 +25,30 @@ public class Main {
             UserData you = new UserData("Anago", Color.RED);
 
             Drawer drawer = new Drawer();
+            
+            //server
+            NetworkSender sender = new NetworkSender();
+            Connecter cc = new Connecter(sender);
+            JButton b2 = new JButton("server");
+            b2.setBounds(850, 150, 100, 100);
+            b2.addActionListener(e -> {
+                Thread thread = new Thread(cc);
+                thread.start();
+            });
+            frame.add(b2);
+            
+            //client
+            JButton b = new JButton();
+            b.setBounds(850, 5, 100, 100);
+            NetworkInput input = new NetworkInput();
+            b.addActionListener(e -> {
+                input.Connect(10000);
+                Thread thread = new Thread(input);
+                thread.start();
+            });
+            frame.add(b);
 
-            AnswerPanel aPanel = new AnswerPanel(you);
+            AnswerPanel aPanel = new AnswerPanel(you, sender, input);
             aPanel.setBounds(5, 5, 300, 600);
 
             Palette palette = new Palette(drawer);
@@ -36,8 +58,8 @@ public class Main {
             drawPanel.setBounds(310, 5, 500, 550);
             drawPanel.changeMauseInputReception(true);
 
-            //Thread thread = new Thread(drawPanel);
-            //thread.start();
+            
+            
             frame.add(aPanel);
             frame.add(drawPanel);
             frame.add(palette);

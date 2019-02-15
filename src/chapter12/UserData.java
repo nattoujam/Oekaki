@@ -6,12 +6,13 @@
 package chapter12;
 
 import java.awt.Color;
+import java.io.Serializable;
 
 /**
  *
  * @author local-nattou
  */
-public class UserData {
+public class UserData implements Serializable {
 
     public String name = "defaultName";
     public Color color = Color.black;
