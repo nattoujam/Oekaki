@@ -27,11 +27,11 @@ public class AnswerPanel extends JPanel {
     private JTextField answerArea;
     private final UserData myData;
     private final DefaultStyledDocument doc;
-    private final NetworkSender sender;
+    private final NetworkClient client;
 
-    public AnswerPanel(UserData d, NetworkSender sender, NetworkInput input) {
-        this.sender = sender;
-        input.addHandler(LogPacket.class, p -> logAppend(p.getTime(), p.getUserData(), p.getLog()));
+    public AnswerPanel(UserData d, NetworkClient client) {
+        this.client = client;
+        client.addHandler(LogPacket.class, p -> logAppend(p.getTime(), p.getUserData(), p.getLog()));
         this.setLayout(new BorderLayout(0, 5));
 
         this.myData = d;
@@ -95,10 +95,10 @@ public class AnswerPanel extends JPanel {
             if (log.equals("")) {
                 return;
             }
-            logAppend(e.getWhen(), myData, log);
+            //logAppend(e.getWhen(), myData, log);
             answerArea.setText("");
             Packet packet = new LogPacket(myData, e.getWhen(), log);
-            sender.Send(packet);
+            client.aggregation(packet);
         }
     }
 }

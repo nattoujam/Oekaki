@@ -22,7 +22,7 @@ import java.util.logging.Logger;
  */
 
 //client
-public class NetworkInput implements Runnable {
+public class NetworkClient implements Runnable {
 
     //ソケットサブクラス別イベントのリスト
     private final HashMap<Class, List<Consumer<Packet>>> packetHandlers;
@@ -35,6 +35,7 @@ public class NetworkInput implements Runnable {
         packetHandlers = new HashMap<>();
     }
     
+    //ソケットサブクラス別ラムダ式のリスト要素追加
     public <T extends Packet> void addHandler(Class<T> clazz, Consumer<T> handler) {
         List<Consumer<Packet>> list = packetHandlers.get(clazz);
         if(list == null) { 
@@ -44,36 +45,60 @@ public class NetworkInput implements Runnable {
         list.add(p -> handler.accept((T)p));
     }
     
-    public void Connect(int port) {
+    //サーバーに接続
+    public void connect(int port) {
         try {
             this.socket = new Socket("localhost", port);
             this.sender = new ObjectOutputStream(socket.getOutputStream());
             this.receiver = new ObjectInputStream(socket.getInputStream());
         }
         catch (IOException ex) {
-            Logger.getLogger(NetworkInput.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(NetworkClient.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
+    //サーバーに集約
+    public synchronized void aggregation(Packet p) {
+        try {
+            sender.writeObject(p);
+            sender.flush();
+        }
+        catch (IOException ex) {
+            Logger.getLogger(NetworkClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void close() {
+        try {
+            sender.close();
+            receiver.close();
+            socket.close();
+        }
+        catch (IOException ex) {
+            Logger.getLogger(NetworkClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    //サーバーから受信
     @Override
     public void run() {
-        while(true) {
-            System.out.println("receive");
-            try {
-                //１行受信の処理
+        try {
+            while(true) {
                 Packet data = (Packet)receiver.readObject();
+                
                 if(data == null) continue;
+                
                 List<Consumer<Packet>> handlers = packetHandlers.get(data.getClass());
                 for(Consumer<Packet> c : handlers) {
                     c.accept(data);
                 }
             }
-            catch (IOException ex) {
-                Logger.getLogger(NetworkInput.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            catch (ClassNotFoundException ex) {
-                Logger.getLogger(NetworkInput.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        }
+        catch (IOException ex) {
+            Logger.getLogger(NetworkClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (ClassNotFoundException ex) {
+            Logger.getLogger(NetworkClient.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

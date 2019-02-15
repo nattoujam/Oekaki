@@ -16,6 +16,8 @@ public class Main {
 
     public static void main(String args[]) {
         SwingUtilities.invokeLater(() -> {
+            boolean isHost = false;
+            
             final JFrame frame = new JFrame();
             frame.setLocationRelativeTo(null);
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -27,28 +29,33 @@ public class Main {
             Drawer drawer = new Drawer();
             
             //server
-            NetworkSender sender = new NetworkSender();
-            Connecter cc = new Connecter(sender);
+            NetworkServer sender = new NetworkServer(3);
+            //client
+            NetworkClient input = new NetworkClient();
+            
             JButton b2 = new JButton("server");
             b2.setBounds(850, 150, 100, 100);
             b2.addActionListener(e -> {
-                Thread thread = new Thread(cc);
+                Thread thread = new Thread(sender);
                 thread.start();
+                
+                input.connect(10000);
+                Thread thread2 = new Thread(input);
+                thread2.start();
             });
             frame.add(b2);
             
-            //client
             JButton b = new JButton();
             b.setBounds(850, 5, 100, 100);
-            NetworkInput input = new NetworkInput();
             b.addActionListener(e -> {
-                input.Connect(10000);
+                you.color = Color.BLUE;
+                input.connect(10000);
                 Thread thread = new Thread(input);
                 thread.start();
             });
             frame.add(b);
 
-            AnswerPanel aPanel = new AnswerPanel(you, sender, input);
+            AnswerPanel aPanel = new AnswerPanel(you, input);
             aPanel.setBounds(5, 5, 300, 600);
 
             Palette palette = new Palette(drawer);
