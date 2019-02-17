@@ -25,16 +25,15 @@ public class AnswerPanel extends JPanel {
 
     private final JTextPane logArea;
     private JTextField answerArea;
-    private final UserData myData;
+    private UserData myData;
     private final DefaultStyledDocument doc;
     private final NetworkClient client;
 
-    public AnswerPanel(UserData d, NetworkClient client) {
+    public AnswerPanel(NetworkClient client) {
         this.client = client;
-        client.addHandler(LogPacket.class, p -> logAppend(p.getTime(), p.getUserData(), p.getLog()));
+        client.getPacketSelector().addHandler(LogPacket.class, p -> logAppend(p.getTime(), p.getUserData(), p.getLog()));
         this.setLayout(new BorderLayout(0, 5));
 
-        this.myData = d;
         this.logArea = new JTextPane();
         logArea.setEditable(false);
         StyleContext sc = new StyleContext();
@@ -44,12 +43,16 @@ public class AnswerPanel extends JPanel {
         JScrollPane scrollPane = new JScrollPane(logArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setBorder(new EtchedBorder(EtchedBorder.LOWERED));
 
-        logAppend(new Date(), new UserData("GM", new Color(200, 0, 255)), "Welcome to \"おえか木\" !!");
+        logAppend(new Date(), new ServerUserData(), "Welcome to \"おえか木\" !!");
 
         JPanel inputArea = createInputTextField();
 
         this.add(scrollPane, BorderLayout.CENTER);
         this.add(inputArea, BorderLayout.SOUTH);
+    }
+    
+    public void setUserData(UserData u) {
+        this.myData = u;
     }
 
     private JPanel createInputTextField() {

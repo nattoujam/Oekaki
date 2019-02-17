@@ -5,20 +5,26 @@
  */
 package chapter12;
 
-import java.io.Serializable;
+import java.awt.Color;
 
 /**
  *
  * @author local-nattou
  */
-public abstract class Packet implements Serializable {
-    private final UserData sender;
+public class UserDataPacket extends Packet {
     
-    protected Packet(UserData sender) {
-        this.sender = sender;
+    private final UserData data;
+    
+    public UserDataPacket(UserData sender) {
+        super(sender);
+        this.data = sender;
     }
 
+    /**
+     * @return the data
+     */
     public UserData getUserData() {
-        return sender;
+        return data;
     }
+    
 }

@@ -14,9 +14,9 @@ import java.io.Serializable;
  */
 public class UserData implements Serializable {
 
-    public String name = "defaultName";
-    public Color color = Color.black;
-
+    private String name = "defaultName";
+    private Color color = Color.BLACK;
+    
     public UserData(String n, Color c) {
         this.name = n;
         this.color = c;

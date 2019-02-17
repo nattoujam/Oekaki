@@ -5,7 +5,7 @@
  */
 package chapter12;
 
-import java.awt.Color;
+import java.awt.BorderLayout;
 import javax.swing.*;
 
 /**
@@ -13,67 +13,34 @@ import javax.swing.*;
  * @author local-nattou
  */
 public class Main {
-
     public static void main(String args[]) {
         SwingUtilities.invokeLater(() -> {
-            boolean isHost = false;
+            final JFrame initFrame = new JFrame();
+            initFrame.setLocationRelativeTo(null);
+            initFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            initFrame.setBounds(50, 50, 1000, 700);
+            initFrame.setLayout(null);
             
-            final JFrame frame = new JFrame();
-            frame.setLocationRelativeTo(null);
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setBounds(50, 50, 1000, 700);
-            frame.setLayout(null);
-
-            UserData you = new UserData("Anago", Color.RED);
-
-            Drawer drawer = new Drawer();
+            //ここから最初の画面
+            JTextField inputName = new JTextField("");
+            ServerForm serverForm = new ServerForm(initFrame, inputName);
+            ClientForm clientForm = new ClientForm(initFrame, inputName);
             
-            //server
-            NetworkServer sender = new NetworkServer(3);
-            //client
-            NetworkClient input = new NetworkClient();
+            inputName.setBounds(500, 150, 100, 20);
+            serverForm.setBounds(100, 300, 200, 200);
+            clientForm.setBounds(450, 300, 200, 200);
             
-            JButton b2 = new JButton("server");
-            b2.setBounds(850, 150, 100, 100);
-            b2.addActionListener(e -> {
-                Thread thread = new Thread(sender);
-                thread.start();
-                
-                input.connect(10000);
-                Thread thread2 = new Thread(input);
-                thread2.start();
-            });
-            frame.add(b2);
-            
-            JButton b = new JButton();
-            b.setBounds(850, 5, 100, 100);
-            b.addActionListener(e -> {
-                you.color = Color.BLUE;
-                input.connect(10000);
-                Thread thread = new Thread(input);
-                thread.start();
-            });
-            frame.add(b);
-
-            AnswerPanel aPanel = new AnswerPanel(you, input);
-            aPanel.setBounds(5, 5, 300, 600);
-
-            Palette palette = new Palette(drawer);
-            palette.setBounds(310, 560, 500, 50);
-
-            DrawPanel drawPanel = new DrawPanel(drawer);
-            drawPanel.setBounds(310, 5, 500, 550);
-            drawPanel.changeMauseInputReception(true);
-
+            initFrame.add(inputName);
+            initFrame.add(serverForm);
+            initFrame.add(clientForm);
+            initFrame.setVisible(true);
+            //ここまで
             
             
-            frame.add(aPanel);
-            frame.add(drawPanel);
-            frame.add(palette);
-
+            
             //frame.pack();
             //frame.getContentPane().add(drawPanel);
-            frame.setVisible(true);
+            //frame.setVisible(true);
         });
     }
 }

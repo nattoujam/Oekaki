@@ -5,6 +5,7 @@
  */
 package chapter12;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -23,24 +24,38 @@ import java.util.logging.Logger;
 //server
 public class NetworkServer implements Runnable {
     
+    private final int port;
     private ServerSocket server;
     private final List<Socket> clients;
     private final List<ObjectOutputStream> senders;
     private final List<ObjectInputStream> receivers;
     private final int numOfClients; 
+    private final List<Color> colors;
     
-    public NetworkServer(int numOfClients) {
+    private final GameManager gm;
+    
+    public NetworkServer(int port, int numOfClients) {
+        this.port = port;
         this.clients = new ArrayList<>();
         this.senders = new ArrayList<>();
         this.receivers = new ArrayList<>();
         this.numOfClients = numOfClients;
+        this.colors = new ArrayList<>();
+        colors.add(Color.RED);
+        colors.add(Color.BLUE);
+        colors.add(Color.ORANGE);
+        colors.add(Color.MAGENTA);
+        this.gm = new GameManager();
     }
     
     //クライアント追加
     private void addClient(Socket sc) {
         clients.add(sc);
         try {
-            senders.add(new ObjectOutputStream(sc.getOutputStream()));
+            ObjectOutputStream sender = new ObjectOutputStream(sc.getOutputStream());
+            sender.writeObject(new ColorPacket(new ServerUserData(), colors.get(0)));
+            colors.remove(0);
+            senders.add(sender);
             receivers.add(new ObjectInputStream(sc.getInputStream()));
         }
         catch (IOException ex) {
@@ -64,9 +79,21 @@ public class NetworkServer implements Runnable {
     }
     
     private void startClientReceiverThread(ObjectInputStream receiver) {
-        Thread thread = new ReceiveFromClientThread(senders, receiver);
+        Thread thread = new ShareClientsThread(senders, receiver, gm);
         thread.start();
         System.out.println("run");
+    }
+    
+    public void sendToAllClients(Packet packet) {
+        for(ObjectOutputStream sender : senders) {
+            try {
+                sender.writeObject(packet);
+                sender.flush();
+            }
+            catch (IOException ex) {
+                Logger.getLogger(NetworkServer.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } 
     }
     
     public void close() {
@@ -85,7 +112,7 @@ public class NetworkServer implements Runnable {
     @Override
     public void run() {
         try {
-            server = new ServerSocket(10000);
+            server = new ServerSocket(port);
         }
         catch (IOException ex) {
             Logger.getLogger(NetworkServer.class.getName()).log(Level.SEVERE, null, ex);

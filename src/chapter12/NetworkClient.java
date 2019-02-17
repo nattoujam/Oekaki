@@ -9,10 +9,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -24,31 +20,20 @@ import java.util.logging.Logger;
 //client
 public class NetworkClient implements Runnable {
 
-    //ソケットサブクラス別イベントのリスト
-    private final HashMap<Class, List<Consumer<Packet>>> packetHandlers;
+    private final PacketSelector packetSelector;
     
     private Socket socket;
     private ObjectOutputStream sender;
     private ObjectInputStream receiver;
     
-    {
-        packetHandlers = new HashMap<>();
-    }
-    
-    //ソケットサブクラス別ラムダ式のリスト要素追加
-    public <T extends Packet> void addHandler(Class<T> clazz, Consumer<T> handler) {
-        List<Consumer<Packet>> list = packetHandlers.get(clazz);
-        if(list == null) { 
-            list = new ArrayList<>();
-            packetHandlers.put(clazz, list);
-        }
-        list.add(p -> handler.accept((T)p));
+    public NetworkClient() {
+        packetSelector = new PacketSelector();
     }
     
     //サーバーに接続
-    public void connect(int port) {
+    public void connect(String IP, int port) {
         try {
-            this.socket = new Socket("localhost", port);
+            this.socket = new Socket(IP, port);
             this.sender = new ObjectOutputStream(socket.getOutputStream());
             this.receiver = new ObjectInputStream(socket.getInputStream());
         }
@@ -86,12 +71,7 @@ public class NetworkClient implements Runnable {
             while(true) {
                 Packet data = (Packet)receiver.readObject();
                 
-                if(data == null) continue;
-                
-                List<Consumer<Packet>> handlers = packetHandlers.get(data.getClass());
-                for(Consumer<Packet> c : handlers) {
-                    c.accept(data);
-                }
+                if(data != null) packetSelector.receive(data);
             }
         }
         catch (IOException ex) {
@@ -100,5 +80,12 @@ public class NetworkClient implements Runnable {
         catch (ClassNotFoundException ex) {
             Logger.getLogger(NetworkClient.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    /**
+     * @return the packetSelector
+     */
+    public PacketSelector getPacketSelector() {
+        return packetSelector;
     }
 }

@@ -14,8 +14,8 @@ public class LogPacket extends Packet {
     private final Object time;
     private final String log;
     
-    public LogPacket(UserData u, Object time, String log) {
-        super(u);
+    public LogPacket(UserData sender, Object time, String log) {
+        super(sender);
         this.time = time;
         this.log = log;
     }

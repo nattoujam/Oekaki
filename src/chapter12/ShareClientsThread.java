@@ -16,14 +16,28 @@ import java.util.logging.Logger;
  *
  * @author local-nattou
  */
-public class ReceiveFromClientThread extends Thread {
+public class ShareClientsThread extends Thread {
     
+    private final PacketSelector packetSelector;
     private final List<ObjectOutputStream> senders;
     private final ObjectInputStream receiver;
+    private final GameManager gm;
     
-    public ReceiveFromClientThread(List<ObjectOutputStream> senders, ObjectInputStream receiver) {
+    public ShareClientsThread(List<ObjectOutputStream> senders, ObjectInputStream receiver, GameManager gm) {
+        this.packetSelector = new PacketSelector();
         this.senders = senders;
         this.receiver = receiver;
+        this.gm = gm;
+        
+        packetSelector.addHandler(UserDataPacket.class, p -> {
+            sendToAllClients(p);
+        });
+        packetSelector.addHandler(LogPacket.class, p -> {
+            sendToAllClients(p);
+            if(gm.isCollectAnswer(p.getLog())) {
+                sendToAllClients(new GameStartPacket(new ServerUserData(), gm.getNextDrawer(), gm.getNextTheme()));
+            }
+        });
     }
     
     @Override
@@ -34,7 +48,7 @@ public class ReceiveFromClientThread extends Thread {
     }
     
     //クライアント全員に共有
-    private void shareWithClient(Packet packet) {
+    private void sendToAllClients(Packet packet) {
         try {
             for(ObjectOutputStream sender : senders) {
                 System.out.println("Share");
@@ -52,8 +66,7 @@ public class ReceiveFromClientThread extends Thread {
         try {
             System.out.println("Receive");
             Packet packet = (Packet)receiver.readObject();
-
-            if(packet != null) shareWithClient(packet);
+            packetSelector.receive(packet);
         }
         catch (IOException ex) {
             Logger.getLogger(NetworkClient.class.getName()).log(Level.SEVERE, null, ex);
@@ -61,5 +74,12 @@ public class ReceiveFromClientThread extends Thread {
         catch (ClassNotFoundException ex) {
             Logger.getLogger(NetworkClient.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    /**
+     * @return the packetSelector
+     */
+    public PacketSelector getPacketSelector() {
+        return packetSelector;
     }
 }
