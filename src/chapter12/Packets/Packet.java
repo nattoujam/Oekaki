@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package chapter12;
+package chapter12.Packets;
 
+import chapter12.UserData;
 import java.io.Serializable;
 
 /**

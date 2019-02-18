@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package chapter12;
+package chapter12.Network;
 
+import chapter12.Packets.Packet;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,7 +34,7 @@ public class PacketSelector {
     }
     
     public void receive(Packet data) {
-        System.out.println("sender:" + data.getUserData().getName() + " → " + "[" + data.getClass() + "]");
+        System.out.println("Receive:[" + data.getClass() + "]");
         List<Consumer<Packet>> handlers = packetHandlers.get(data.getClass());
         for(Consumer<Packet> c : handlers) {
             c.accept(data);

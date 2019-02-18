@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package chapter12;
+package chapter12.Pens;
 
 import java.awt.BasicStroke;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Stroke;
 
@@ -13,20 +14,20 @@ import java.awt.Stroke;
  *
  * @author local-nattou
  */
-public class RectanglePen extends Pen {
+public class CirclePen extends Pen {
 
     @Override
     public String getName() {
-        return "RectanglePen";
+        return "CirclePen";
     }
     
     @Override
-    protected void penDraw(Point p) {
-        g2D.fillRect(p.x - radius, p.y - radius, radius * 2, radius * 2);
+    protected void penDraw(Graphics2D g, Point p) {
+        g.fillOval(p.x - radius, p.y - radius, radius * 2, radius * 2);
     }
 
     @Override
     protected Stroke makeStroke() {
-        return new BasicStroke(radius * 2, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_BEVEL);
+        return new BasicStroke(radius * 2, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
     }
 }

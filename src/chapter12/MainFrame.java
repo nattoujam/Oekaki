@@ -5,6 +5,10 @@
  */
 package chapter12;
 
+import chapter12.Network.NetworkClient;
+import chapter12.Packets.UserDataPacket;
+import chapter12.Packets.ColorPacket;
+import chapter12.Packets.GameStartPacket;
 import javax.swing.JFrame;
 
 /**
@@ -25,20 +29,20 @@ public class MainFrame extends JFrame {
         this.setBounds(50, 50, 1000, 700);
         this.setLayout(null);
         
-        Drawer drawer = new Drawer();
         this.answerPanel = new AnswerPanel(client);
         answerPanel.setBounds(5, 110, 300, 500);
-        Palette palette = new Palette(drawer);
-        palette.setBounds(310, 560, 500, 50);
-        DrawPanel drawPanel = new DrawPanel(drawer);
+        DrawPanel drawPanel = new DrawPanel(client);
         drawPanel.setBounds(310, 5, 500, 550);
+        PalettePanel palettePanel = new PalettePanel();
+        palettePanel.setBounds(310, 560, 500, 50);
+        palettePanel.addPenUpdater(drawPanel::setPen);
         drawPanel.changeMauseInputReception(true);
         this.pdPanel = new PlayerDataPanel();
         pdPanel.setBounds(5, 5, 300, 100);
 
         this.add(answerPanel);
         this.add(drawPanel);
-        this.add(palette);
+        this.add(palettePanel);
         this.add(pdPanel);
     }
     
@@ -48,7 +52,7 @@ public class MainFrame extends JFrame {
         });
         client.getPacketSelector().addHandler(ColorPacket.class, p -> {
             UserData you = new UserData(name, p.getColor());
-            answerPanel.setUserData(you);
+            client.setMyData(you);
             client.aggregation(new UserDataPacket(you));
         });
         client.getPacketSelector().addHandler(GameStartPacket.class, p -> {

@@ -5,6 +5,9 @@
  */
 package chapter12;
 
+import chapter12.Network.NetworkClient;
+import chapter12.Packets.LogPacket;
+import chapter12.Packets.Packet;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -25,7 +28,6 @@ public class AnswerPanel extends JPanel {
 
     private final JTextPane logArea;
     private JTextField answerArea;
-    private UserData myData;
     private final DefaultStyledDocument doc;
     private final NetworkClient client;
 
@@ -49,10 +51,6 @@ public class AnswerPanel extends JPanel {
 
         this.add(scrollPane, BorderLayout.CENTER);
         this.add(inputArea, BorderLayout.SOUTH);
-    }
-    
-    public void setUserData(UserData u) {
-        this.myData = u;
     }
 
     private JPanel createInputTextField() {
@@ -100,7 +98,7 @@ public class AnswerPanel extends JPanel {
             }
             //logAppend(e.getWhen(), myData, log);
             answerArea.setText("");
-            Packet packet = new LogPacket(myData, e.getWhen(), log);
+            Packet packet = new LogPacket(client.getMyData(), e.getWhen(), log);
             client.aggregation(packet);
         }
     }

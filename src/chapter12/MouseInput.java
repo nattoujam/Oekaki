@@ -5,6 +5,11 @@
  */
 package chapter12;
 
+import chapter12.Packets.MousePressedPacket;
+import chapter12.Packets.MouseDragPacket;
+import chapter12.Network.NetworkClient;
+import chapter12.Pens.Pen;
+import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -15,16 +20,44 @@ import java.awt.event.MouseMotionListener;
  */
 public class MouseInput implements MouseMotionListener, MouseListener {
 
-    private Drawer d;
-
-    public MouseInput(Drawer d) {
-        this.d = d;
+    private DrawComponent dCom; //final
+    private Pen pen;
+    private final NetworkClient client;
+    
+    public MouseInput(NetworkClient client) {
+        this.client = client;
+        client.getPacketSelector().addHandler(MousePressedPacket.class, p -> {
+            this.pen = p.getPen();
+            drawInit(p.getPoint());
+        });
+        client.getPacketSelector().addHandler(MouseDragPacket.class, p -> {
+            draw(p.getPoint());
+        });
     }
-
+    
+    public void setDrawComponent(DrawComponent dCom) {
+        this.dCom = dCom;
+    }
+    
+    public void setPen(Pen pen) {
+        this.pen = pen;
+    }
+    
+    private void drawInit(Point p) {
+        pen.penInit(dCom.getGraphics2D(), p);
+        dCom.repaint();
+    }
+    
+    private void draw(Point p) {
+        pen.draw(dCom.getGraphics2D(), p);
+        dCom.repaint();
+    }
+    
     //MouseMotionListener
     @Override
     public void mouseDragged(MouseEvent e) {
-        d.doDrawing(e.getPoint());
+        draw(e.getPoint());
+        client.aggregation(new MouseDragPacket(client.getMyData(), e.getPoint()));
     }
 
     @Override
@@ -39,7 +72,8 @@ public class MouseInput implements MouseMotionListener, MouseListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        d.prepareDrawing(e.getPoint());
+        drawInit(e.getPoint());
+        client.aggregation(new MousePressedPacket(client.getMyData(), pen, e.getPoint()));
     }
 
     @Override

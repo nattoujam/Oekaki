@@ -3,8 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package chapter12;
+package chapter12.Network;
 
+import chapter12.GameManager;
+import chapter12.Packets.UserDataPacket;
+import chapter12.Packets.GameStartPacket;
+import chapter12.Packets.LogPacket;
+import chapter12.Packets.MouseDragPacket;
+import chapter12.Packets.MousePressedPacket;
+import chapter12.Packets.Packet;
+import chapter12.ServerUserData;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -29,9 +37,9 @@ public class ShareClientsThread extends Thread {
         this.receiver = receiver;
         this.gm = gm;
         
-        packetSelector.addHandler(UserDataPacket.class, p -> {
-            sendToAllClients(p);
-        });
+        packetSelector.addHandler(UserDataPacket.class, this::sendToAllClients);
+        packetSelector.addHandler(MousePressedPacket.class, this::sendToAllClients);
+        packetSelector.addHandler(MouseDragPacket.class, this::sendToAllClients);
         packetSelector.addHandler(LogPacket.class, p -> {
             sendToAllClients(p);
             if(gm.isCollectAnswer(p.getLog())) {
@@ -42,8 +50,19 @@ public class ShareClientsThread extends Thread {
     
     @Override
     public void run() {
-        while(true) {
-            receiveFromClient();
+        try {
+            //クライアントから受信
+            while(true) {
+                Packet packet = (Packet)receiver.readObject();
+                System.out.println("Receive at ShareClientsThread");
+                if(packet != null) packetSelector.receive(packet);
+            }
+        }
+        catch (IOException ex) {
+            Logger.getLogger(NetworkClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (ClassNotFoundException ex) {
+            Logger.getLogger(NetworkClient.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -51,28 +70,13 @@ public class ShareClientsThread extends Thread {
     private void sendToAllClients(Packet packet) {
         try {
             for(ObjectOutputStream sender : senders) {
-                System.out.println("Share");
+                System.out.println("Share:" + packet.getUserData().getName() + "(ShareClientsThread)" + " → " + "[" + packet.getClass() + "]");
                 sender.writeObject(packet);
                 sender.flush();
             }
         }
         catch (IOException ex) {
             Logger.getLogger(NetworkServer.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
-    //クライアントから受信
-    private void receiveFromClient() {
-        try {
-            System.out.println("Receive");
-            Packet packet = (Packet)receiver.readObject();
-            packetSelector.receive(packet);
-        }
-        catch (IOException ex) {
-            Logger.getLogger(NetworkClient.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        catch (ClassNotFoundException ex) {
-            Logger.getLogger(NetworkClient.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

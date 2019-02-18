@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package chapter12;
+package chapter12.Network;
 
+import chapter12.Packets.Packet;
+import chapter12.UserData;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -25,6 +27,7 @@ public class NetworkClient implements Runnable {
     private Socket socket;
     private ObjectOutputStream sender;
     private ObjectInputStream receiver;
+    private UserData myData;
     
     public NetworkClient() {
         packetSelector = new PacketSelector();
@@ -45,6 +48,7 @@ public class NetworkClient implements Runnable {
     //サーバーに集約
     public synchronized void aggregation(Packet p) {
         try {
+            System.out.println("aggregation:" + p.getUserData().getName() + "(Client) → [" + p.getClass() + "]");
             sender.writeObject(p);
             sender.flush();
         }
@@ -64,14 +68,15 @@ public class NetworkClient implements Runnable {
         }
     }
     
-    //サーバーから受信
+    
     @Override
     public void run() {
         try {
+            //サーバーから受信
             while(true) {
-                Packet data = (Packet)receiver.readObject();
-                
-                if(data != null) packetSelector.receive(data);
+                Packet packet = (Packet)receiver.readObject();
+                System.out.println("Receive at Client");
+                if(packet != null) packetSelector.receive(packet);
             }
         }
         catch (IOException ex) {
@@ -87,5 +92,19 @@ public class NetworkClient implements Runnable {
      */
     public PacketSelector getPacketSelector() {
         return packetSelector;
+    }
+
+    /**
+     * @return the myData
+     */
+    public UserData getMyData() {
+        return myData;
+    }
+
+    /**
+     * @param myData the myData to set
+     */
+    public void setMyData(UserData myData) {
+        this.myData = myData;
     }
 }

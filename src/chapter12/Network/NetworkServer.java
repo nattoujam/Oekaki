@@ -3,8 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package chapter12;
+package chapter12.Network;
 
+import chapter12.GameManager;
+import chapter12.Packets.ColorPacket;
+import chapter12.Packets.Packet;
+import chapter12.ServerUserData;
 import java.awt.Color;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -26,17 +30,14 @@ public class NetworkServer implements Runnable {
     
     private final int port;
     private ServerSocket server;
-    private final List<Socket> clients;
     private final List<ObjectOutputStream> senders;
     private final List<ObjectInputStream> receivers;
     private final int numOfClients; 
     private final List<Color> colors;
-    
     private final GameManager gm;
     
     public NetworkServer(int port, int numOfClients) {
         this.port = port;
-        this.clients = new ArrayList<>();
         this.senders = new ArrayList<>();
         this.receivers = new ArrayList<>();
         this.numOfClients = numOfClients;
@@ -50,9 +51,9 @@ public class NetworkServer implements Runnable {
     
     //クライアント追加
     private void addClient(Socket sc) {
-        clients.add(sc);
         try {
             ObjectOutputStream sender = new ObjectOutputStream(sc.getOutputStream());
+            System.out.println("server → ColorPacket");
             sender.writeObject(new ColorPacket(new ServerUserData(), colors.get(0)));
             colors.remove(0);
             senders.add(sender);
@@ -69,7 +70,7 @@ public class NetworkServer implements Runnable {
             //クライアント接続待機
             Socket sc = server.accept();
 
-            System.out.println("Welcom!");
+            System.out.println("Welcome!");
             addClient(sc);
         }
         catch(IOException ex)
@@ -81,24 +82,24 @@ public class NetworkServer implements Runnable {
     private void startClientReceiverThread(ObjectInputStream receiver) {
         Thread thread = new ShareClientsThread(senders, receiver, gm);
         thread.start();
-        System.out.println("run");
+        System.out.println("start ClientReceiverThread");
     }
     
-    public void sendToAllClients(Packet packet) {
-        for(ObjectOutputStream sender : senders) {
-            try {
-                sender.writeObject(packet);
-                sender.flush();
-            }
-            catch (IOException ex) {
-                Logger.getLogger(NetworkServer.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        } 
-    }
+//    public void sendToAllClients(Packet packet) {
+//        for(ObjectOutputStream sender : senders) {
+//            try {
+//                sender.writeObject(packet);
+//                sender.flush();
+//            }
+//            catch (IOException ex) {
+//                Logger.getLogger(NetworkServer.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//        } 
+//    }
     
     public void close() {
         try {
-            for(int i = 0; i < clients.size(); i++) {
+            for(int i = 0; i < receivers.size(); i++) {
                 senders.get(i).close();
                 receivers.get(i).close();
                 server.close();

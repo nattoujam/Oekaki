@@ -5,6 +5,8 @@
  */
 package chapter12;
 
+import chapter12.Network.NetworkClient;
+import chapter12.Pens.Pen;
 import java.awt.BorderLayout;
 import java.awt.Graphics;
 import javax.swing.JButton;
@@ -19,14 +21,14 @@ public class DrawPanel extends JPanel {
     private final DrawComponent dCom;
     private final MouseInput mi;
 
-    public DrawPanel(Drawer d) {
+    public DrawPanel(NetworkClient client) {
         this.setLayout(new BorderLayout(0, 5));
 
         this.dCom = new DrawComponent();
-        d.setDrawComponent(dCom);
         this.add(dCom, BorderLayout.CENTER);
 
-        this.mi = new MouseInput(d);
+        this.mi = new MouseInput(client);
+        mi.setDrawComponent(dCom);
 
         JButton reset = new JButton("レイヤークリア");
         reset.setFocusPainted(false);
@@ -35,6 +37,10 @@ public class DrawPanel extends JPanel {
             dCom.repaint();
         });
         this.add(reset, BorderLayout.SOUTH);
+    }
+    
+    public void setPen(Pen pen) {
+        mi.setPen(pen);
     }
 
     //マウス受付の切り替え

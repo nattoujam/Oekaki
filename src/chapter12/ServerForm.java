@@ -5,6 +5,8 @@
  */
 package chapter12;
 
+import chapter12.Network.NetworkServer;
+import chapter12.Network.NetworkClient;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.net.InetAddress;
