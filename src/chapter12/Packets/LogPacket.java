@@ -13,10 +13,10 @@ import chapter12.UserData;
  */
 public class LogPacket extends Packet {
     
-    private final Object time;
+    private final long time;
     private final String log;
     
-    public LogPacket(UserData sender, Object time, String log) {
+    public LogPacket(UserData sender, long time, String log) {
         super(sender);
         this.time = time;
         this.log = log;
@@ -25,7 +25,7 @@ public class LogPacket extends Packet {
     /**
      * @return the time
      */
-    public Object getTime() {
+    public long getTime() {
         return time;
     }
 

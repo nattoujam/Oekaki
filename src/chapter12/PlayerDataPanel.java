@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.border.EtchedBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 
@@ -28,9 +29,11 @@ public class PlayerDataPanel extends JPanel {
     private final DefaultTableModel dataModel;
     
     public PlayerDataPanel() {
-        this.setLayout(new BorderLayout());
-        themeField = new JTextField();
+        this.setLayout(new BorderLayout(5, 5));
+        themeField = new JTextField("???");
         themeField.setEditable(false);
+        themeField.setBorder(new EtchedBorder());
+        themeField.setHorizontalAlignment(JTextField.CENTER);
         dataModel = new DefaultTableModel(columnNames, 0);
         dataTable = new JTable(dataModel);
         dataTable.setEnabled(false);

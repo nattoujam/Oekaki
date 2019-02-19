@@ -6,12 +6,7 @@
 package chapter12.Network;
 
 import chapter12.GameManager;
-import chapter12.Packets.UserDataPacket;
-import chapter12.Packets.GameStartPacket;
-import chapter12.Packets.LogPacket;
-import chapter12.Packets.MouseDragPacket;
-import chapter12.Packets.MousePressedPacket;
-import chapter12.Packets.Packet;
+import chapter12.Packets.*;
 import chapter12.ServerUserData;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -37,13 +32,32 @@ public class ShareClientsThread extends Thread {
         this.receiver = receiver;
         this.gm = gm;
         
-        packetSelector.addHandler(UserDataPacket.class, this::sendToAllClients);
+        packetSelector.addHandler(UserDataPacket.class, p -> {
+            this.sendToAllClients(p);
+            gm.addPlayer(p.getUserData().getName());
+        });
         packetSelector.addHandler(MousePressedPacket.class, this::sendToAllClients);
         packetSelector.addHandler(MouseDragPacket.class, this::sendToAllClients);
+        packetSelector.addHandler(LayerClearPacket.class, this::sendToAllClients);
+        packetSelector.addHandler(ResultPacket.class, this::sendToAllClients);
+        packetSelector.addHandler(GameReadyPacket.class, p -> {
+            if(gm.readyGame(p.isReady())) {
+                gm.startTimer();
+                this.sendToAllClients(new GameStartPacket(new ServerUserData(), gm.getNextDrawer(), gm.getNextTheme()));
+            }
+        });
         packetSelector.addHandler(LogPacket.class, p -> {
             sendToAllClients(p);
             if(gm.isCollectAnswer(p.getLog())) {
-                sendToAllClients(new GameStartPacket(new ServerUserData(), gm.getNextDrawer(), gm.getNextTheme()));
+                sendToAllClients(new LogPacket(new ServerUserData(), p.getTime(), p.getUserData().getName() + "さんが正解しました！！！\r\nお題は「" + gm.getTheme() + "」でした。"));
+                sendToAllClients(new ResultPacket(new ServerUserData(), gm.getDrawer(), p.getUserData().getName(), gm.getScore(p.getTime()), false));
+                if(gm.isFinish()) {
+                    System.out.println("Finish");
+                    sendToAllClients(new GameFinishPacket(new ServerUserData()));
+                }
+                else {
+                    sendToAllClients(new GameStartPacket(new ServerUserData(), gm.getNextDrawer(), gm.getNextTheme()));
+                }
             }
         });
     }

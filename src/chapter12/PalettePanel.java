@@ -44,7 +44,7 @@ public class PalettePanel extends JPanel implements Palette {
     public Pen getSelectedPen() {
         return this.pen;
     }
-
+    
     private void updatePen() {
         pen.setColor(color);
         pen.setRadius(radius);

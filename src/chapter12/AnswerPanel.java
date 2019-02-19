@@ -45,7 +45,7 @@ public class AnswerPanel extends JPanel {
         JScrollPane scrollPane = new JScrollPane(logArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setBorder(new EtchedBorder(EtchedBorder.LOWERED));
 
-        logAppend(new Date(), new ServerUserData(), "Welcome to \"おえか木\" !!");
+        logAppend(System.currentTimeMillis(), new ServerUserData(), "Welcome to \"おえか木\" !!");
 
         JPanel inputArea = createInputTextField();
 
@@ -70,7 +70,7 @@ public class AnswerPanel extends JPanel {
     }
 
     //ログテキスト追加
-    private String logAppend(Object time, UserData d, String str) {
+    private String logAppend(long time, UserData d, String str) {
         SimpleDateFormat sdf = new SimpleDateFormat("[kk:mm.ss]");
 
         SimpleAttributeSet attr = new SimpleAttributeSet();

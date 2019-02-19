@@ -6,6 +6,7 @@
 package chapter12;
 
 import chapter12.Network.NetworkClient;
+import chapter12.Packets.LayerClearPacket;
 import chapter12.Pens.Pen;
 import java.awt.BorderLayout;
 import java.awt.Graphics;
@@ -20,6 +21,7 @@ public class DrawPanel extends JPanel {
 
     private final DrawComponent dCom;
     private final MouseInput mi;
+    private final JButton reset;
 
     public DrawPanel(NetworkClient client) {
         this.setLayout(new BorderLayout(0, 5));
@@ -29,29 +31,33 @@ public class DrawPanel extends JPanel {
 
         this.mi = new MouseInput(client);
         mi.setDrawComponent(dCom);
+        this.addMouseMotionListener(mi);
+        this.addMouseListener(mi);
 
-        JButton reset = new JButton("レイヤークリア");
+        this.reset = new JButton("レイヤークリア");
         reset.setFocusPainted(false);
         reset.addActionListener(e -> {
-            dCom.makeBufferedImage();
-            dCom.repaint();
+            dCom.clear();
+            client.aggregation(new LayerClearPacket(client.getMyData()));
         });
         this.add(reset, BorderLayout.SOUTH);
+        
+        client.getPacketSelector().addHandler(LayerClearPacket.class, p -> dCom.clear());
     }
     
     public void setPen(Pen pen) {
         mi.setPen(pen);
     }
 
-    //マウス受付の切り替え
-    public void changeMauseInputReception(boolean b) {
+    //入力受付の切り替え
+    public void setInputReception(boolean b) {
         if (b) {
-            this.addMouseMotionListener(mi);
-            this.addMouseListener(mi);
+            mi.setCanReception(true);
+            reset.setEnabled(true);
         }
         else {
-            this.removeMouseMotionListener(mi);
-            this.removeMouseListener(mi);
+            mi.setCanReception(false);
+            reset.setEnabled(false);
         }
     }
 
@@ -59,7 +65,7 @@ public class DrawPanel extends JPanel {
     protected void paintComponent(Graphics g) {
         //System.out.println(dCom.getGraphics2D());
         if (dCom.getGraphics2D() == null) {
-            dCom.makeBufferedImage();
+            dCom.clear();
         }
     }
 }

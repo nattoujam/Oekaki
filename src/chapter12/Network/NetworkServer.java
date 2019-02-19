@@ -36,7 +36,7 @@ public class NetworkServer implements Runnable {
     private final List<Color> colors;
     private final GameManager gm;
     
-    public NetworkServer(int port, int numOfClients) {
+    public NetworkServer(int port, int numOfClients, GameManager gm) {
         this.port = port;
         this.senders = new ArrayList<>();
         this.receivers = new ArrayList<>();
@@ -46,7 +46,7 @@ public class NetworkServer implements Runnable {
         colors.add(Color.BLUE);
         colors.add(Color.ORANGE);
         colors.add(Color.MAGENTA);
-        this.gm = new GameManager();
+        this.gm = gm;
     }
     
     //クライアント追加

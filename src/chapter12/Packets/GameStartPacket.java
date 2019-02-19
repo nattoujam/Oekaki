@@ -14,13 +14,17 @@ import chapter12.UserData;
  */
 public class GameStartPacket extends Packet {
     
-    private final String drawer;
-    private final String theme;
+    private String drawer;
+    private String theme;
     
     public GameStartPacket(UserData sender, String drawer, String theme) {
         super(sender);
         this.drawer = drawer;
         this.theme = theme;
+    }
+
+    public GameStartPacket(UserData sender) {
+        super(sender);
     }
 
     /**

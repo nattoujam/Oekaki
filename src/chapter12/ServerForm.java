@@ -44,6 +44,7 @@ public class ServerForm extends JPanel {
         JComboBox numOfPlayer = new JComboBox(select);
         JButton connection = new JButton("開放");
         
+        
         NetworkClient client = new NetworkClient();
         MainFrame mainFrame = new MainFrame(client);
         connection.addActionListener(e -> {
@@ -52,6 +53,7 @@ public class ServerForm extends JPanel {
             
             if(inputName.getText().equals("")) return;
             client.setName(inputName.getText());
+            GameManager gm = new GameManager();
             
             initFrame.setVisible(false);
             client.getPacketSelector().addHandler(ColorPacket.class, p -> {
@@ -61,26 +63,14 @@ public class ServerForm extends JPanel {
                 client.aggregation(new UserDataPacket(you));
             });
             
-            System.out.println((int)numOfPlayer.getSelectedItem());
-            
-            Thread establishConnection = new Thread(new NetworkServer(Integer.parseInt(inputPort.getText()), (int)numOfPlayer.getSelectedItem()));
+            Thread establishConnection = new Thread(new NetworkServer(Integer.parseInt(inputPort.getText()), (int)numOfPlayer.getSelectedItem(), gm));
             establishConnection.start();
-            
-            System.out.println(Integer.parseInt(inputPort.getText()));
 
             client.connect("localhost", Integer.parseInt(inputPort.getText()));
             Thread clientRecieve = new Thread(client);
             clientRecieve.start();
             
-            String IP = "";
-            try {
-                InetAddress testIP = InetAddress.getLocalHost();
-                IP = testIP.getHostAddress();
-            }
-            catch (UnknownHostException ex) {
-                Logger.getLogger(ServerForm.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            JOptionPane.showMessageDialog(null, IP, "Your IP address", JOptionPane.PLAIN_MESSAGE);
+            JOptionPane.showMessageDialog(null, getIP(), "Your IP address", JOptionPane.PLAIN_MESSAGE);
             
             mainFrame.setVisible(true);
         });
@@ -88,5 +78,17 @@ public class ServerForm extends JPanel {
         this.add(Tools.LabeledJComponent("ポート", inputPort));
         this.add(Tools.LabeledJComponent("人数", numOfPlayer));
         this.add(connection);
+    }
+    
+    private String getIP() {
+        String IP = "";
+        try {
+            InetAddress testIP = InetAddress.getLocalHost();
+            IP = testIP.getHostAddress();
+        }
+        catch (UnknownHostException ex) {
+            Logger.getLogger(ServerForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return IP;
     }
 }

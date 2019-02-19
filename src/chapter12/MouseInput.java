@@ -23,6 +23,7 @@ public class MouseInput implements MouseMotionListener, MouseListener {
     private DrawComponent dCom; //final
     private Pen pen;
     private final NetworkClient client;
+    private boolean canReception = true;
     
     public MouseInput(NetworkClient client) {
         this.client = client;
@@ -57,8 +58,10 @@ public class MouseInput implements MouseMotionListener, MouseListener {
     //MouseMotionListener
     @Override
     public void mouseDragged(MouseEvent e) {
-        draw(e.getPoint());
-        client.aggregation(new MouseDragPacket(client.getMyData(), e.getPoint()));
+        if(canReception) {
+            draw(e.getPoint());
+            client.aggregation(new MouseDragPacket(client.getMyData(), e.getPoint()));
+        }
     }
 
     @Override
@@ -73,10 +76,12 @@ public class MouseInput implements MouseMotionListener, MouseListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        drawInit(e.getPoint());
-        System.out.println("send(" + pen.getColor() + ")");
-        Pen sendPen = pen;
-        client.aggregation(new MousePressedPacket(client.getMyData(), sendPen, e.getPoint()));
+        if(canReception) {
+            drawInit(e.getPoint());
+            System.out.println("send(" + pen.getColor() + ")");
+            Pen sendPen = pen;
+            client.aggregation(new MousePressedPacket(client.getMyData(), sendPen, e.getPoint()));
+        }
     }
 
     @Override
@@ -89,5 +94,12 @@ public class MouseInput implements MouseMotionListener, MouseListener {
 
     @Override
     public void mouseExited(MouseEvent e) {
+    }
+
+    /**
+     * @param canReception the canReception to set
+     */
+    public void setCanReception(boolean canReception) {
+        this.canReception = canReception;
     }
 }
