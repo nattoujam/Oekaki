@@ -10,12 +10,15 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Stroke;
 import java.io.Serializable;
+import java.util.Random;
 
 /**
  *
  * @author local-nattou
  */
 public abstract class Pen implements Serializable {
+    
+    private static final long serialVersionUID = 1L;
 
     private Color color = Color.BLACK;
     protected int radius = 5;
@@ -24,7 +27,7 @@ public abstract class Pen implements Serializable {
     public void penInit(Graphics2D g, Point first) {
         this.previousPoint = first;
 
-        g.setColor(color);
+        g.setColor(getColor());
         g.setStroke(makeStroke());
         penDraw(g, first);
     }
@@ -67,5 +70,12 @@ public abstract class Pen implements Serializable {
             g.drawLine(x, y, x, y);
         }
         this.previousPoint = p;
+    }
+
+    /**
+     * @return the color
+     */
+    public Color getColor() {
+        return color;
     }
 }

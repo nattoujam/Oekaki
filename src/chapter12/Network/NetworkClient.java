@@ -5,8 +5,11 @@
  */
 package chapter12.Network;
 
+import chapter12.Packets.ColorPacket;
 import chapter12.Packets.Packet;
+import chapter12.Packets.UserDataPacket;
 import chapter12.UserData;
+import java.awt.Color;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -28,6 +31,7 @@ public class NetworkClient implements Runnable {
     private ObjectOutputStream sender;
     private ObjectInputStream receiver;
     private UserData myData;
+    private String myName;
     
     public NetworkClient() {
         packetSelector = new PacketSelector();
@@ -75,8 +79,12 @@ public class NetworkClient implements Runnable {
             //サーバーから受信
             while(true) {
                 Packet packet = (Packet)receiver.readObject();
-                System.out.println("Receive at Client");
-                if(packet != null) packetSelector.receive(packet);
+                System.out.println("Receive at " + myName + "(Client)");
+                if(packet.getUserData().getName().equals(myName)) {
+                    System.out.println("Ignore reception");
+                   // continue;
+                }
+                packetSelector.receive(packet);
             }
         }
         catch (IOException ex) {
@@ -92,6 +100,10 @@ public class NetworkClient implements Runnable {
      */
     public PacketSelector getPacketSelector() {
         return packetSelector;
+    }
+    
+    public void setName(String name) {
+        this.myName = name;
     }
 
     /**

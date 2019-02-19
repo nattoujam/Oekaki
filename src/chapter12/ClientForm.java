@@ -6,6 +6,8 @@
 package chapter12;
 
 import chapter12.Network.NetworkClient;
+import chapter12.Packets.ColorPacket;
+import chapter12.Packets.UserDataPacket;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import javax.swing.JButton;
@@ -29,8 +31,8 @@ public class ClientForm extends JPanel {
         this.setLayout(layout);
         layout.setVgap(50);
         
-        JTextField inputPort = new JTextField();
-        JTextField inputIP = new JTextField();
+        JTextField inputPort = new JTextField("100");
+        JTextField inputIP = new JTextField("localhost");
         JButton connection = new JButton("接続");
         
         NetworkClient client = new NetworkClient();
@@ -39,7 +41,14 @@ public class ClientForm extends JPanel {
             if(inputName.getText().equals("")) return;
             
             initFrame.setVisible(false);
-            mainFrame.init(inputName.getText());
+            client.setName(inputName.getText());
+            
+            client.getPacketSelector().addHandler(ColorPacket.class, p -> {
+                UserData you = new UserData(inputName.getText(), p.getColor());
+                client.setMyData(you);
+                mainFrame.init(you);
+                client.aggregation(new UserDataPacket(you));
+            });
             
             client.connect(inputIP.getText(), Integer.parseInt(inputPort.getText()));
             Thread clientReceive = new Thread(client);
@@ -48,17 +57,8 @@ public class ClientForm extends JPanel {
             mainFrame.setVisible(true);
         });
         
-        this.add(labeledJComponent(inputPort, "ポート"));
-        this.add(labeledJComponent(inputIP, "IPアドレス"));
+        this.add(Tools.LabeledJComponent("ポート", inputPort));
+        this.add(Tools.LabeledJComponent("IPアドレス", inputIP));
         this.add(connection);
-    }
-    
-    private JPanel labeledJComponent(JComponent j, String str) {
-        JPanel panel = new JPanel();
-        panel.setLayout(new BorderLayout(5, 0));
-        JLabel label = new JLabel(str);
-        panel.add(j, BorderLayout.CENTER);
-        panel.add(label, BorderLayout.WEST);
-        return panel;
     }
 }

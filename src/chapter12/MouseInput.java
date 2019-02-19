@@ -27,6 +27,7 @@ public class MouseInput implements MouseMotionListener, MouseListener {
     public MouseInput(NetworkClient client) {
         this.client = client;
         client.getPacketSelector().addHandler(MousePressedPacket.class, p -> {
+            System.out.println("receive(" + p.getPen().getColor() + ")");
             this.pen = p.getPen();
             drawInit(p.getPoint());
         });
@@ -73,7 +74,9 @@ public class MouseInput implements MouseMotionListener, MouseListener {
     @Override
     public void mousePressed(MouseEvent e) {
         drawInit(e.getPoint());
-        client.aggregation(new MousePressedPacket(client.getMyData(), pen, e.getPoint()));
+        System.out.println("send(" + pen.getColor() + ")");
+        Pen sendPen = pen;
+        client.aggregation(new MousePressedPacket(client.getMyData(), sendPen, e.getPoint()));
     }
 
     @Override

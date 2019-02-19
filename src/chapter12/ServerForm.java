@@ -7,6 +7,8 @@ package chapter12;
 
 import chapter12.Network.NetworkServer;
 import chapter12.Network.NetworkClient;
+import chapter12.Packets.ColorPacket;
+import chapter12.Packets.UserDataPacket;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.net.InetAddress;
@@ -37,7 +39,7 @@ public class ServerForm extends JPanel {
         this.setLayout(layout);
         layout.setVgap(50);
         
-        JTextField inputPort = new JTextField();
+        JTextField inputPort = new JTextField("100");
         Integer[] select = {1, 2, 3};
         JComboBox numOfPlayer = new JComboBox(select);
         JButton connection = new JButton("開放");
@@ -49,9 +51,15 @@ public class ServerForm extends JPanel {
             //se.StartTestSound();
             
             if(inputName.getText().equals("")) return;
+            client.setName(inputName.getText());
             
             initFrame.setVisible(false);
-            mainFrame.init(inputName.getText());
+            client.getPacketSelector().addHandler(ColorPacket.class, p -> {
+                UserData you = new UserData(inputName.getText(), p.getColor());
+                client.setMyData(you);
+                mainFrame.init(you);
+                client.aggregation(new UserDataPacket(you));
+            });
             
             System.out.println((int)numOfPlayer.getSelectedItem());
             
@@ -77,17 +85,8 @@ public class ServerForm extends JPanel {
             mainFrame.setVisible(true);
         });
         
-        this.add(labeledJComponent(inputPort, "ポート"));
-        this.add(labeledJComponent(numOfPlayer, "人数"));
+        this.add(Tools.LabeledJComponent("ポート", inputPort));
+        this.add(Tools.LabeledJComponent("人数", numOfPlayer));
         this.add(connection);
-    }
-    
-    private JPanel labeledJComponent(JComponent j, String str) {
-        JPanel panel = new JPanel();
-        panel.setLayout(new BorderLayout(5, 0));
-        JLabel label = new JLabel(str);
-        panel.add(j, BorderLayout.CENTER);
-        panel.add(label, BorderLayout.WEST);
-        return panel;
     }
 }

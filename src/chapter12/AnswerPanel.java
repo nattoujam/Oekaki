@@ -96,7 +96,7 @@ public class AnswerPanel extends JPanel {
             if (log.equals("")) {
                 return;
             }
-            //logAppend(e.getWhen(), myData, log);
+            logAppend(e.getWhen(), client.getMyData(), log);
             answerArea.setText("");
             Packet packet = new LogPacket(client.getMyData(), e.getWhen(), log);
             client.aggregation(packet);

@@ -55,7 +55,7 @@ public class ShareClientsThread extends Thread {
             while(true) {
                 Packet packet = (Packet)receiver.readObject();
                 System.out.println("Receive at ShareClientsThread");
-                if(packet != null) packetSelector.receive(packet);
+                packetSelector.receive(packet);
             }
         }
         catch (IOException ex) {

@@ -46,17 +46,13 @@ public class MainFrame extends JFrame {
         this.add(pdPanel);
     }
     
-    public void init(String name) {
+    public void init(UserData data) {
+        pdPanel.addPlayer(data);
         client.getPacketSelector().addHandler(UserDataPacket.class, p -> {
             pdPanel.addPlayer(p.getUserData());
         });
-        client.getPacketSelector().addHandler(ColorPacket.class, p -> {
-            UserData you = new UserData(name, p.getColor());
-            client.setMyData(you);
-            client.aggregation(new UserDataPacket(you));
-        });
         client.getPacketSelector().addHandler(GameStartPacket.class, p -> {
-            if(name.equals(p.getDrawer())) {
+            if(data.getName().equals(p.getDrawer())) {
                 pdPanel.setTheme(p.getTheme());
             }
             else {
