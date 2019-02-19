@@ -9,12 +9,13 @@ import java.awt.BasicStroke;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Stroke;
+import java.io.Serializable;
 
 /**
  *
  * @author local-nattou
  */
-public class CirclePen extends Pen {
+public class CirclePen extends Pen implements Serializable{
 
     @Override
     public String getName() {
@@ -23,11 +24,11 @@ public class CirclePen extends Pen {
     
     @Override
     protected void penDraw(Graphics2D g, Point p) {
-        g.fillOval(p.x - radius, p.y - radius, radius * 2, radius * 2);
+        g.fillOval(p.x - getRadius(), p.y - getRadius(), getRadius() * 2, getRadius() * 2);
     }
 
     @Override
     protected Stroke makeStroke() {
-        return new BasicStroke(radius * 2, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+        return new BasicStroke(getRadius() * 2, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
     }
 }

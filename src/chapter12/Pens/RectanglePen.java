@@ -23,11 +23,11 @@ public class RectanglePen extends Pen {
     
     @Override
     protected void penDraw(Graphics2D g, Point p) {
-        g.fillRect(p.x - radius, p.y - radius, radius * 2, radius * 2);
+        g.fillRect(p.x - getRadius(), p.y - getRadius(), getRadius() * 2, getRadius() * 2);
     }
 
     @Override
     protected Stroke makeStroke() {
-        return new BasicStroke(radius * 2, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_BEVEL);
+        return new BasicStroke(getRadius() * 2, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_BEVEL);
     }
 }

@@ -82,7 +82,7 @@ public class NetworkClient implements Runnable {
                 System.out.println("Receive at " + myName + "(Client)");
                 if(packet.getUserData().getName().equals(myName)) {
                     System.out.println("Ignore reception");
-                   // continue;
+                    continue;
                 }
                 packetSelector.receive(packet);
             }

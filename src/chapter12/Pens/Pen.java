@@ -9,7 +9,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Stroke;
-import java.io.Serializable;
+import java.io.*;
 import java.util.Random;
 
 /**
@@ -21,7 +21,7 @@ public abstract class Pen implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Color color = Color.BLACK;
-    protected int radius = 5;
+    private int radius = 5;
     private Point previousPoint;
 
     public void penInit(Graphics2D g, Point first) {
@@ -77,5 +77,12 @@ public abstract class Pen implements Serializable {
      */
     public Color getColor() {
         return color;
+    }
+
+    /**
+     * @return the radius
+     */
+    public int getRadius() {
+        return radius;
     }
 }
