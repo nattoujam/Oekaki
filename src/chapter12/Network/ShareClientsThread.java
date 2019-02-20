@@ -33,33 +33,46 @@ public class ShareClientsThread extends Thread {
         this.gm = gm;
         
         packetSelector.addHandler(UserDataPacket.class, p -> {
-            this.sendToAllClients(p);
+            sendToAllClients(p);
             gm.addPlayer(p.getUserData().getName());
         });
         packetSelector.addHandler(MousePressedPacket.class, this::sendToAllClients);
         packetSelector.addHandler(MouseDragPacket.class, this::sendToAllClients);
         packetSelector.addHandler(LayerClearPacket.class, this::sendToAllClients);
-        packetSelector.addHandler(ResultPacket.class, this::sendToAllClients);
+        packetSelector.addHandler(ResultPacket.class, p -> {
+            //時間切れの場合
+            sendToAllClients(p);
+            sendToAllClients(new LogPacket(new ServerUserData(), System.currentTimeMillis(), "時間切れです。\r\nお題は「" + gm.getTheme() + "」でした。"));
+            nextGame();
+        });
         packetSelector.addHandler(GameReadyPacket.class, p -> {
+            //ゲーム開始
             if(gm.readyGame(p.isReady())) {
                 gm.startTimer();
-                this.sendToAllClients(new GameStartPacket(new ServerUserData(), gm.getNextDrawer(), gm.getNextTheme()));
+                nextGame();
             }
         });
         packetSelector.addHandler(LogPacket.class, p -> {
             sendToAllClients(p);
+            //正解した場合
             if(gm.isCollectAnswer(p.getLog())) {
                 sendToAllClients(new LogPacket(new ServerUserData(), p.getTime(), p.getUserData().getName() + "さんが正解しました！！！\r\nお題は「" + gm.getTheme() + "」でした。"));
                 sendToAllClients(new ResultPacket(new ServerUserData(), gm.getDrawer(), p.getUserData().getName(), gm.getScore(p.getTime()), false));
-                if(gm.isFinish()) {
-                    System.out.println("Finish");
-                    sendToAllClients(new GameFinishPacket(new ServerUserData()));
-                }
-                else {
-                    sendToAllClients(new GameStartPacket(new ServerUserData(), gm.getNextDrawer(), gm.getNextTheme()));
-                }
+                nextGame();
             }
         });
+    }
+    
+    private void nextGame() {
+        if(gm.isFinish()) {
+            System.out.println("Finish");
+            sendToAllClients(new GameFinishPacket(new ServerUserData()));
+        }
+        else {
+            String drawer = gm.getNextDrawer();
+            sendToAllClients(new LogPacket(new ServerUserData(), System.currentTimeMillis(), drawer + "さんが描き手です！！！"));
+            sendToAllClients(new GameStartPacket(new ServerUserData(), drawer, gm.getNextTheme()));
+        }
     }
     
     @Override

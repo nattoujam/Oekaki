@@ -13,8 +13,10 @@ import chapter12.Packets.GameStartPacket;
 import chapter12.Packets.ResultPacket;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JToggleButton;
+import javax.swing.Timer;
 
 /**
  *
@@ -28,6 +30,7 @@ public class MainFrame extends JFrame {
     private final DrawPanel drawPanel;
     private final PalettePanel palettePanel;
     private final JToggleButton startButton;
+    private final JTimer jTimer;
     
     public MainFrame(NetworkClient client) {
         this.client = client;
@@ -55,13 +58,18 @@ public class MainFrame extends JFrame {
             startButton.setText(text);
             client.aggregation(new GameReadyPacket(client.getMyData(), startButton.isSelected()));
         });
-        startButton.setBounds(815, 5, 150, 500);
+        startButton.setBounds(815, 155, 150, 400);
+        this.jTimer = new JTimer(() -> {
+            client.aggregation(new ResultPacket(client.getMyData(), null, null, 0, true));
+        });
+        jTimer.setBounds(815, 5, 150, 50);
 
         this.add(answerPanel);
         this.add(drawPanel);
         this.add(palettePanel);
         this.add(pdPanel);
         this.add(startButton);
+        this.add(jTimer);
     }
     
     public void init(UserData data) {
@@ -71,26 +79,32 @@ public class MainFrame extends JFrame {
         });
         client.getPacketSelector().addHandler(GameStartPacket.class, p -> {
             startButton.setEnabled(false);
-            //タイマースタート
+            jTimer.start();
             if(data.getName().equals(p.getDrawer())) {
                 pdPanel.setTheme(p.getTheme());
                 drawPanel.setInputReception(true);
-                JOptionPane.showMessageDialog(null, "あなたは描き手です。", client.getMyData().getName() + "さんへ", JOptionPane.PLAIN_MESSAGE);
+                
+                //JOptionPane.showMessageDialog(null, "あなたは描き手です。", client.getMyData().getName() + "さんへ", JOptionPane.PLAIN_MESSAGE);
             }
             else {
                 pdPanel.setTheme("お題を予想しよう！！");
                 drawPanel.setInputReception(false);
-                JOptionPane.showMessageDialog(null, "あなたは解答者です。", client.getMyData().getName() + "さんへ", JOptionPane.PLAIN_MESSAGE);
+                //JOptionPane.showMessageDialog(null, "あなたは解答者です。", client.getMyData().getName() + "さんへ", JOptionPane.PLAIN_MESSAGE);
             }
         });
         client.getPacketSelector().addHandler(ResultPacket.class, p -> {
             //得点の付与
+            pdPanel.setScore(p.getRespondent(), p.getScore());
+            pdPanel.setScore(p.getDrawer(), p.getScore());
         });
         client.getPacketSelector().addHandler(GameFinishPacket.class, p -> {
             //ゲーム終了
+            drawPanel.setInputReception(true);
+            jTimer.stop();
             startButton.setEnabled(true);
             startButton.setSelected(false);
-            JOptionPane.showMessageDialog(null, "優勝は、です！！！", "業務連絡", JOptionPane.PLAIN_MESSAGE);
+            JOptionPane.showMessageDialog(null, "優勝は、" + pdPanel.getWinner() + "です！！！", "業務連絡", JOptionPane.PLAIN_MESSAGE);
+            pdPanel.setTheme("");
         });
     }
 

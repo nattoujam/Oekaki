@@ -23,7 +23,7 @@ public class GameManager {
     private String drawer;
     private long startTime;
     private int readyCount = 0;
-    private static final int TIME_LIMIT = 120;
+    public static final int TIME_LIMIT = 20;
     private static final int MAX_SCORE = 300;
     
     public GameManager() {
@@ -31,6 +31,7 @@ public class GameManager {
     }
     
     public String getNextDrawer() {
+        startTime = System.currentTimeMillis();
         Random rand = new Random();
         int index = rand.nextInt(tempPlayers.size());
         drawer = tempPlayers.get(index);
@@ -40,7 +41,9 @@ public class GameManager {
     }
     
     public String getNextTheme() {
-        theme = "あなご";
+        Themes[] themes = Themes.values();
+        Random rand = new Random();
+        theme = themes[rand.nextInt(themes.length)].toString();
         return getTheme();
     }
     
@@ -60,12 +63,18 @@ public class GameManager {
     
     public int getScore(long answeredTime) {
         //いい感じに計算(基礎点)
-        int time = (int) (answeredTime - startTime);
+        int time = (int) (answeredTime - startTime) / 1000;
         return (time < TIME_LIMIT) ? MAX_SCORE - (MAX_SCORE / TIME_LIMIT) * time : 0;
     } 
     
     public boolean isFinish() {
-        return (tempPlayers.size() == 0);
+        if(tempPlayers.isEmpty()) {
+            theme = "";
+            return true;
+        }
+        else {
+            return false;
+        }
     }
     
     public boolean readyGame(boolean isReady) {
@@ -91,5 +100,48 @@ public class GameManager {
      */
     public String getTheme() {
         return theme;
+    }
+    
+    enum Themes {
+        あなご,
+        りんご,
+        しらす,
+        たまねぎ,
+        こんにゃく,
+        ばなな,
+        うなぎ,
+        ほうれんそう,
+        きゃべつ,
+        はくさい,
+        ぴーまん,
+        にんじん,
+        じゃがいも,
+        しらたき,
+        かれー,
+        しちゅー,
+        ぱすた,
+        ゆーふぉー,
+        とらんぷ,
+        なっとう,
+        じゃむ,
+        さくら,
+        うめ,
+        なす,
+        とまと,
+        ばたー,
+        きゅうり,
+        きーぼーど,
+        まうす,
+        まいく,
+        てれび,
+        かめら,
+        ぽめらにあん,
+        まんちかん,
+        かいちゅうでんとう,
+        はいぽーしょん
+    }
+
+    public GameManager(List<String> players) {
+        this.players = players;
     }
 }

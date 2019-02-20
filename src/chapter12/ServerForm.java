@@ -70,7 +70,7 @@ public class ServerForm extends JPanel {
             Thread clientRecieve = new Thread(client);
             clientRecieve.start();
             
-            JOptionPane.showMessageDialog(null, getIP(), "Your IP address", JOptionPane.PLAIN_MESSAGE);
+            //JOptionPane.showMessageDialog(null, getIP(), "Your IP address", JOptionPane.PLAIN_MESSAGE);
             
             mainFrame.setVisible(true);
         });

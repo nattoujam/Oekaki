@@ -57,6 +57,29 @@ public class PlayerDataPanel extends JPanel {
         themeField.setText(theme);
     }
     
+    public void setScore(String name, int score) {
+        for(int i = 0; i < dataTable.getRowCount(); i++) {
+            if(dataModel.getValueAt(i, dataTable.getColumn("名前").getModelIndex()).equals(name)) {
+                int currentScore = (int) dataModel.getValueAt(i, dataTable.getColumn("得点").getModelIndex());
+                dataModel.setValueAt(currentScore + score, i, dataTable.getColumn("得点").getModelIndex());
+                System.out.println(currentScore + " → " + (currentScore + score));
+            }
+        }
+    }
+    
+    public String getWinner() {
+        int bestScore = 0;
+        int bestScoreIndex = 0;
+        for(int i = 0; i < dataTable.getRowCount(); i++) {
+            int score  = (int) dataModel.getValueAt(i, dataTable.getColumn("得点").getModelIndex());
+            if(bestScore < score) {
+                bestScore = score;
+                bestScoreIndex = i;
+            }
+        }
+        return (String) dataModel.getValueAt(bestScoreIndex, dataTable.getColumn("名前").getModelIndex());
+    }
+    
     private class ColorRenderer implements TableCellRenderer{
          @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {

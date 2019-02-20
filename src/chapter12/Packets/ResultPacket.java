@@ -25,4 +25,32 @@ public class ResultPacket extends Packet {
         this.score = score;
         this.isTimeLimit = isTimeLimit;
     }
+
+    /**
+     * @return the drawer
+     */
+    public String getDrawer() {
+        return drawer;
+    }
+
+    /**
+     * @return the respondent
+     */
+    public String getRespondent() {
+        return respondent;
+    }
+
+    /**
+     * @return the score
+     */
+    public int getScore() {
+        return score;
+    }
+
+    /**
+     * @return the isTimeLimit
+     */
+    public boolean isIsTimeLimit() {
+        return isTimeLimit;
+    }
 }

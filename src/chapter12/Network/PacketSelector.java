@@ -36,6 +36,10 @@ public class PacketSelector {
     public void receive(Packet data) {
         System.out.println("Receive:[" + data.getClass() + "]");
         List<Consumer<Packet>> handlers = packetHandlers.get(data.getClass());
+        if(handlers == null) {
+            System.err.printf("handlers of %s is null.%n", data.getClass());
+            return;
+        } 
         for(Consumer<Packet> c : handlers) {
             c.accept(data);
         }
