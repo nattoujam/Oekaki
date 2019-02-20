@@ -6,41 +6,90 @@
 package chapter12;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.io.IOException;
+import java.io.InputStream;
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.border.SoftBevelBorder;
 
 /**
  *
  * @author local-nattou
  */
 public class Main {
+    
     public static void main(String args[]) {
         SwingUtilities.invokeLater(() -> {
-            final JFrame initFrame = new JFrame();
-            initFrame.setLocationRelativeTo(null);
-            initFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            initFrame.setBounds(50, 50, 1000, 700);
-            initFrame.setLayout(null);
-            
-            //ここから最初の画面
-            JTextField inputName = new JTextField("");
-            ServerForm serverForm = new ServerForm(initFrame, inputName);
-            ClientForm clientForm = new ClientForm(initFrame, inputName);
-            
-            inputName.setBounds(500, 150, 100, 20);
-            serverForm.setBounds(100, 300, 200, 200);
-            clientForm.setBounds(450, 300, 200, 200);
-            
-            initFrame.add(inputName);
-            initFrame.add(serverForm);
-            initFrame.add(clientForm);
-            initFrame.setVisible(true);
-            //ここまで
-            
-            
-            
-            //frame.pack();
-            //frame.getContentPane().add(drawPanel);
-            //frame.setVisible(true);
+            Main main = new Main();
         });
+    }
+    
+    public Main() {
+        ImageIcon image = new ImageIcon(getClass().getResource("/Image/frontpage.png"));
+        //try (InputStream inputStream = getClass().getResourceAsStream("frontpage.png")) {
+        //    image = ImageIO.read(inputStream);
+        //} catch (IOException e) {
+        //    e.printStackTrace();
+        //}
+            
+        final JFrame initFrame = new JFrame();
+        initFrame.setLocationRelativeTo(null);
+        initFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        initFrame.setBounds(50, 50, 1025, 650);
+        initFrame.setLayout(null);
+        initFrame.setResizable(false);
+
+
+        //ここから最初の画面
+        JTextField inputName = new JTextField("");
+        inputName.setHorizontalAlignment(JTextField.CENTER);
+        
+        ServerForm serverForm = new ServerForm(initFrame, inputName);
+        ClientForm clientForm = new ClientForm(initFrame, inputName);
+        JPanel networkForm = new JPanel();
+        GridLayout layout = new GridLayout(1, 2);
+        layout.setHgap(10);
+        networkForm.setLayout(layout);
+        
+        networkForm.add(serverForm);
+        networkForm.add(clientForm);
+        
+        
+        JPanel panel = new JPanel();
+        panel.setBorder(new CompoundBorder(
+                new CompoundBorder(
+                        new LineBorder(Color.WHITE, 5), 
+                        new BevelBorder(BevelBorder.LOWERED)), 
+                new LineBorder(new Color(240, 240, 240), 5)
+        ));
+        panel.setLayout(new BorderLayout(10, 5));
+        panel.setBounds(273, 300, 470, 200);
+
+        panel.add(Tools.LabeledJComponent("おなまえ", inputName), BorderLayout.NORTH);
+        panel.add(networkForm, BorderLayout.CENTER);
+        
+        
+        JLabel imageLabel = new JLabel(image);
+        imageLabel.setBounds(0, 0, 1025, 650);
+        
+        initFrame.add(panel);
+        initFrame.add(imageLabel);
+        initFrame.setVisible(true);
+        //ここまで
+
+
+
+        //frame.pack();
+        //frame.getContentPane().add(drawPanel);
+        //frame.setVisible(true);
     }
 }

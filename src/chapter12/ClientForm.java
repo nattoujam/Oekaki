@@ -29,7 +29,7 @@ public class ClientForm extends JPanel {
         this.setBorder(new TitledBorder(new EtchedBorder(), "クライアント"));
         GridLayout layout = new GridLayout(3, 1);
         this.setLayout(layout);
-        layout.setVgap(50);
+        layout.setVgap(10);
         
         JTextField inputPort = new JTextField("100");
         JTextField inputIP = new JTextField("localhost");

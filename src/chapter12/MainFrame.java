@@ -33,6 +33,7 @@ public class MainFrame extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setBounds(50, 50, 1025, 650);
         this.setLayout(null);
+        this.setResizable(false);
         
         themeField = new JTextField("???");
         themeField.setEditable(false);

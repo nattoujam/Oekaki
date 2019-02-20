@@ -9,11 +9,9 @@ import chapter12.Network.NetworkClient;
 import chapter12.Packets.LogPacket;
 import chapter12.Packets.Packet;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
@@ -38,7 +36,7 @@ public class AnswerPanel extends JPanel {
 
         this.logArea = new JTextPane();
         logArea.setEditable(false);
-        logArea.setCaretPosition(logArea.getText().length());
+        //logArea.setCaretPosition(logArea.getText().length());
         StyleContext sc = new StyleContext();
         doc = new DefaultStyledDocument(sc);
         logArea.setDocument(doc);
@@ -71,7 +69,7 @@ public class AnswerPanel extends JPanel {
     }
 
     //ログテキスト追加
-    private String logAppend(long time, UserData d, String str) {
+    private void logAppend(long time, UserData d, String str) {
         SimpleDateFormat sdf = new SimpleDateFormat("[kk:mm.ss]");
 
         SimpleAttributeSet attr = new SimpleAttributeSet();
@@ -81,12 +79,11 @@ public class AnswerPanel extends JPanel {
 
         try {
             doc.insertString(doc.getLength(), log, attr);
+            logArea.setCaretPosition(doc.getLength());
         }
         catch (BadLocationException ex) {
             Logger.getLogger(AnswerPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        return log;
     }
 
     private class Action implements ActionListener {

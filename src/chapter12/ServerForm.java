@@ -9,19 +9,14 @@ import chapter12.Network.NetworkServer;
 import chapter12.Network.NetworkClient;
 import chapter12.Packets.ColorPacket;
 import chapter12.Packets.UserDataPacket;
-import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EtchedBorder;
@@ -37,7 +32,7 @@ public class ServerForm extends JPanel {
         this.setBorder(new TitledBorder(new EtchedBorder(), "サーバー"));
         GridLayout layout = new GridLayout(3, 1);
         this.setLayout(layout);
-        layout.setVgap(50);
+        layout.setVgap(10);
         
         JTextField inputPort = new JTextField("100");
         Integer[] select = {1, 2, 3};
