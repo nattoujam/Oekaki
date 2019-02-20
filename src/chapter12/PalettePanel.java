@@ -14,6 +14,7 @@ import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.Vector;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -56,35 +57,32 @@ public class PalettePanel extends JPanel implements Palette {
         JPanel panel = new JPanel();
         ArrayList<PenButton> list = new ArrayList<>();
 
+        //ペン色の生成
+        Function<Color, PenButton> makePenButton = c -> {
+            PenButton b = new PenButton(c);
+            list.add(b);
+            panel.add(b);
+            return b;
+        };
+
         //消しゴム
-        PenButton eraser = new PenButton(Color.WHITE);
+        PenButton eraser = makePenButton.apply(Color.WHITE);
         eraser.setText("消");
         eraser.setFocusPainted(false);
-
-        //ペン色の生成
-        PenButton black = new PenButton(Color.BLACK);
-        PenButton red = new PenButton(Color.RED);
-        PenButton blue = new PenButton(Color.BLUE);
-        PenButton yellow = new PenButton(Color.YELLOW);
-        PenButton green = new PenButton(Color.GREEN);
-        PenButton temp1 = new PenButton(Color.GREEN);
-        PenButton temp2 = new PenButton(Color.GREEN);
-        PenButton temp3 = new PenButton(Color.GREEN);
-        PenButton temp4 = new PenButton(Color.GREEN);
-
-        //初期値は黒
-        black.isPressed(true);
-
-        list.add(eraser);
-        list.add(black);
-        list.add(red);
-        list.add(blue);
-        list.add(yellow);
-        list.add(green);
-        list.add(temp1);
-        list.add(temp2);
-        list.add(temp3);
-        list.add(temp4);
+        
+        makePenButton.apply(Color.GRAY);
+        makePenButton.apply(Color.RED);
+        makePenButton.apply(new Color(255, 128, 0)); //オレンジ
+        makePenButton.apply(Color.GREEN);
+        makePenButton.apply(Color.BLUE);
+        makePenButton.apply(Color.MAGENTA);
+        makePenButton.apply(Color.BLACK).isPressed(true); //初期値は黒
+        makePenButton.apply(Color.LIGHT_GRAY);
+        makePenButton.apply(Color.PINK);
+        makePenButton.apply(Color.YELLOW);
+        makePenButton.apply(new Color(128, 255, 0)); //黄緑
+        makePenButton.apply(new Color(0, 255, 255)); //水色
+        makePenButton.apply(new Color(33, 0, 4));
 
         for (PenButton p : list) {
             p.addActionListener(e -> {
@@ -95,7 +93,6 @@ public class PalettePanel extends JPanel implements Palette {
                 }
                 p.isPressed(true);
             });
-            panel.add(p);
         }
 
         GridLayout layout = new GridLayout(2, list.size() + 2);

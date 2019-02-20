@@ -24,16 +24,12 @@ import javax.swing.table.TableCellRenderer;
 public class PlayerDataPanel extends JPanel {
     
     private final String[] columnNames = {"色", "名前", "得点"};
-    private final JTextField themeField;
     private final JTable dataTable;
     private final DefaultTableModel dataModel;
     
     public PlayerDataPanel() {
         this.setLayout(new BorderLayout(5, 5));
-        themeField = new JTextField("???");
-        themeField.setEditable(false);
-        themeField.setBorder(new EtchedBorder());
-        themeField.setHorizontalAlignment(JTextField.CENTER);
+        
         dataModel = new DefaultTableModel(columnNames, 0);
         dataTable = new JTable(dataModel);
         dataTable.setEnabled(false);
@@ -44,17 +40,12 @@ public class PlayerDataPanel extends JPanel {
         
         JScrollPane scroll = new JScrollPane(dataTable);
         
-        this.add(Tools.LabeledJComponent("お題", themeField), BorderLayout.NORTH);
         this.add(scroll, BorderLayout.CENTER);
     }
     
     public void addPlayer(UserData userData) {
         Object[] row = {userData.getColor(), userData.getName(), 0};
         dataModel.addRow(row);
-    }
-    
-    public void setTheme(String theme) {
-        themeField.setText(theme);
     }
     
     public void setScore(String name, int score) {

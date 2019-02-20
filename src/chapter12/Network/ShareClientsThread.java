@@ -94,7 +94,7 @@ public class ShareClientsThread extends Thread {
     }
     
     //クライアント全員に共有
-    private void sendToAllClients(Packet packet) {
+    private synchronized void sendToAllClients(Packet packet) {
         try {
             for(ObjectOutputStream sender : senders) {
                 System.out.println("Share:" + packet.getUserData().getName() + "(ShareClientsThread)" + " → " + "[" + packet.getClass() + "]");

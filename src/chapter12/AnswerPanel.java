@@ -38,6 +38,7 @@ public class AnswerPanel extends JPanel {
 
         this.logArea = new JTextPane();
         logArea.setEditable(false);
+        logArea.setCaretPosition(logArea.getText().length());
         StyleContext sc = new StyleContext();
         doc = new DefaultStyledDocument(sc);
         logArea.setDocument(doc);
@@ -45,7 +46,7 @@ public class AnswerPanel extends JPanel {
         JScrollPane scrollPane = new JScrollPane(logArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setBorder(new EtchedBorder(EtchedBorder.LOWERED));
 
-        logAppend(System.currentTimeMillis(), new ServerUserData(), "Welcome to \"おえか木\" !!");
+        logAppend(System.currentTimeMillis(), new ServerUserData(), "Welcome to ”おえか木”！！！\r\n解答はひらがなで行ってください。");
 
         JPanel inputArea = createInputTextField();
 

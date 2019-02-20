@@ -29,8 +29,7 @@ public class DrawPanel extends JPanel {
         this.dCom = new DrawComponent();
         this.add(dCom, BorderLayout.CENTER);
 
-        this.mi = new MouseInput(client);
-        mi.setDrawComponent(dCom);
+        this.mi = new MouseInput(client, dCom);
         this.addMouseMotionListener(mi);
         this.addMouseListener(mi);
 

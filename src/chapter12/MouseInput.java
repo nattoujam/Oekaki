@@ -20,38 +20,36 @@ import java.awt.event.MouseMotionListener;
  */
 public class MouseInput implements MouseMotionListener, MouseListener {
 
-    private DrawComponent dCom; //final
+    private final DrawComponent dCom;
     private Pen pen;
+    private Pen sendPen;
     private final NetworkClient client;
     private boolean canReception = true;
     
-    public MouseInput(NetworkClient client) {
+    public MouseInput(NetworkClient client, DrawComponent dCom) {
         this.client = client;
+        this.dCom = dCom;
         client.getPacketSelector().addHandler(MousePressedPacket.class, p -> {
             System.out.println("receive(" + p.getPen().getColor() + ")");
-            this.pen = p.getPen();
-            drawInit(p.getPoint());
+            this.sendPen = p.getPen();
+            drawInit(p.getPoint(), sendPen);
         });
         client.getPacketSelector().addHandler(MouseDragPacket.class, p -> {
-            draw(p.getPoint());
+            draw(p.getPoint(), sendPen);
         });
-    }
-    
-    public void setDrawComponent(DrawComponent dCom) {
-        this.dCom = dCom;
     }
     
     public void setPen(Pen pen) {
         this.pen = pen;
     }
     
-    private void drawInit(Point p) {
-        pen.penInit(dCom.getGraphics2D(), p);
+    private void drawInit(Point p, Pen usePen) {
+        usePen.penInit(dCom.getGraphics2D(), p);
         dCom.repaint();
     }
     
-    private void draw(Point p) {
-        pen.draw(dCom.getGraphics2D(), p);
+    private void draw(Point p, Pen usePen) {
+        usePen.draw(dCom.getGraphics2D(), p);
         dCom.repaint();
     }
     
@@ -59,7 +57,7 @@ public class MouseInput implements MouseMotionListener, MouseListener {
     @Override
     public void mouseDragged(MouseEvent e) {
         if(canReception) {
-            draw(e.getPoint());
+            draw(e.getPoint(), pen);
             client.aggregation(new MouseDragPacket(client.getMyData(), e.getPoint()));
         }
     }
@@ -77,7 +75,7 @@ public class MouseInput implements MouseMotionListener, MouseListener {
     @Override
     public void mousePressed(MouseEvent e) {
         if(canReception) {
-            drawInit(e.getPoint());
+            drawInit(e.getPoint(), pen);
             System.out.println("send(" + pen.getColor() + ")");
             Pen sendPen = pen;
             client.aggregation(new MousePressedPacket(client.getMyData(), sendPen, e.getPoint()));

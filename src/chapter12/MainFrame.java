@@ -6,17 +6,10 @@
 package chapter12;
 
 import chapter12.Network.NetworkClient;
-import chapter12.Packets.GameFinishPacket;
-import chapter12.Packets.GameReadyPacket;
-import chapter12.Packets.UserDataPacket;
-import chapter12.Packets.GameStartPacket;
-import chapter12.Packets.ResultPacket;
-import javax.swing.JCheckBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JToggleButton;
-import javax.swing.Timer;
+import chapter12.Packets.*;
+import java.awt.BorderLayout;
+import javax.swing.*;
+import javax.swing.border.EtchedBorder;
 
 /**
  *
@@ -25,6 +18,7 @@ import javax.swing.Timer;
 public class MainFrame extends JFrame {
     
     private final NetworkClient client;
+    private final JTextField themeField;
     private final AnswerPanel answerPanel;
     private final PlayerDataPanel pdPanel;
     private final DrawPanel drawPanel;
@@ -34,22 +28,39 @@ public class MainFrame extends JFrame {
     
     public MainFrame(NetworkClient client) {
         this.client = client;
-        
+        this.setTitle("おえか木");
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setBounds(50, 50, 1000, 700);
+        this.setBounds(50, 50, 1025, 650);
         this.setLayout(null);
         
+        themeField = new JTextField("???");
+        themeField.setEditable(false);
+        themeField.setBorder(new EtchedBorder());
+        themeField.setHorizontalAlignment(JTextField.CENTER);
+        this.jTimer = new JTimer(() -> {
+            client.aggregation(new ResultPacket(client.getMyData(), null, null, 0, true));
+        });
+        JPanel gameInfoPanel = new JPanel();
+        gameInfoPanel.setLayout(new BorderLayout(5, 5));
+        gameInfoPanel.add(Tools.LabeledJComponent("お題", themeField), BorderLayout.CENTER);
+        gameInfoPanel.add(Tools.LabeledJComponent("残り", jTimer), BorderLayout.EAST);
+        gameInfoPanel.setBounds(5, 5, 300, 20);
+        
         this.answerPanel = new AnswerPanel(client);
-        answerPanel.setBounds(5, 110, 300, 500);
+        answerPanel.setBounds(5, 140, 300, 460);
+        
         this.drawPanel = new DrawPanel(client);
-        drawPanel.setBounds(310, 5, 500, 550);
-        this.palettePanel = new PalettePanel();
-        palettePanel.setBounds(310, 560, 500, 50);
-        palettePanel.addPenUpdater(drawPanel::setPen);
+        drawPanel.setBounds(310, 5, 690, 540);
         drawPanel.setInputReception(true);
+        
+        this.palettePanel = new PalettePanel();
+        palettePanel.setBounds(310, 550, 500, 50);
+        palettePanel.addPenUpdater(drawPanel::setPen);
+        
         this.pdPanel = new PlayerDataPanel();
-        pdPanel.setBounds(5, 5, 300, 100);
+        pdPanel.setBounds(5, 30, 300, 105);
+        
         this.startButton = new JToggleButton("ゲーム開始申請");
         startButton.addActionListener(e -> {
             String text;
@@ -58,18 +69,14 @@ public class MainFrame extends JFrame {
             startButton.setText(text);
             client.aggregation(new GameReadyPacket(client.getMyData(), startButton.isSelected()));
         });
-        startButton.setBounds(815, 155, 150, 400);
-        this.jTimer = new JTimer(() -> {
-            client.aggregation(new ResultPacket(client.getMyData(), null, null, 0, true));
-        });
-        jTimer.setBounds(815, 5, 150, 50);
-
+        startButton.setBounds(815, 550, 185, 50);
+        
+        this.add(gameInfoPanel);
         this.add(answerPanel);
         this.add(drawPanel);
         this.add(palettePanel);
         this.add(pdPanel);
         this.add(startButton);
-        this.add(jTimer);
     }
     
     public void init(UserData data) {
@@ -81,13 +88,13 @@ public class MainFrame extends JFrame {
             startButton.setEnabled(false);
             jTimer.start();
             if(data.getName().equals(p.getDrawer())) {
-                pdPanel.setTheme(p.getTheme());
+                themeField.setText(p.getTheme());
                 drawPanel.setInputReception(true);
                 
                 //JOptionPane.showMessageDialog(null, "あなたは描き手です。", client.getMyData().getName() + "さんへ", JOptionPane.PLAIN_MESSAGE);
             }
             else {
-                pdPanel.setTheme("お題を予想しよう！！");
+                themeField.setText("お題を予想しよう！！");
                 drawPanel.setInputReception(false);
                 //JOptionPane.showMessageDialog(null, "あなたは解答者です。", client.getMyData().getName() + "さんへ", JOptionPane.PLAIN_MESSAGE);
             }
@@ -99,12 +106,13 @@ public class MainFrame extends JFrame {
         });
         client.getPacketSelector().addHandler(GameFinishPacket.class, p -> {
             //ゲーム終了
+            client.aggregation(new LogPacket(new ServerUserData(), System.currentTimeMillis(), "ゲームが終了しました。"));
             drawPanel.setInputReception(true);
             jTimer.stop();
             startButton.setEnabled(true);
             startButton.setSelected(false);
             JOptionPane.showMessageDialog(null, "優勝は、" + pdPanel.getWinner() + "です！！！", "業務連絡", JOptionPane.PLAIN_MESSAGE);
-            pdPanel.setTheme("");
+            themeField.setText("");
         });
     }
 

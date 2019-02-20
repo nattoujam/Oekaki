@@ -45,7 +45,7 @@ public class JTimer extends JLabel {
         int time = (int) (GameManager.TIME_LIMIT - (current - startTime) / 1000);
         this.setText(String.valueOf(time));
         
-        return (time == 0);
+        return (time < 0);
     }
     
     private class TimerTick implements ActionListener {

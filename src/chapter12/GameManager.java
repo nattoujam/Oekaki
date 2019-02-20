@@ -23,7 +23,7 @@ public class GameManager {
     private String drawer;
     private long startTime;
     private int readyCount = 0;
-    public static final int TIME_LIMIT = 20;
+    public static final int TIME_LIMIT = 120;
     private static final int MAX_SCORE = 300;
     
     public GameManager() {
@@ -85,6 +85,7 @@ public class GameManager {
     
     private void init() {
         tempPlayers = new ArrayList<>(players);
+        tempPlayers.addAll(players);
         readyCount = 0;
     }
 
