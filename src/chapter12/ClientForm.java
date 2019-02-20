@@ -15,6 +15,7 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EtchedBorder;
@@ -38,7 +39,10 @@ public class ClientForm extends JPanel {
         NetworkClient client = new NetworkClient();
         MainFrame mainFrame = new MainFrame(client);
         connection.addActionListener(e -> {
-            if(inputName.getText().equals("")) return;
+            if(inputName.getText().equals("")) {
+                JOptionPane.showMessageDialog(null, "名前を入力してください。", "業務連絡", JOptionPane.OK_OPTION);
+                return;
+            }
             
             initFrame.setVisible(false);
             client.setName(inputName.getText());

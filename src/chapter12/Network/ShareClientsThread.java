@@ -56,7 +56,7 @@ public class ShareClientsThread extends Thread {
             sendToAllClients(p);
             //正解した場合
             if(gm.isCollectAnswer(p.getLog())) {
-                sendToAllClients(new LogPacket(new ServerUserData(), p.getTime(), p.getUserData().getName() + "さんが正解しました！！！\r\nお題は「" + gm.getTheme() + "」でした。"));
+                sendToAllClients(new LogPacket(new ServerUserData(), p.getTime(), p.getUserData().getName() + "さんが正解しました！\r\nお題は「" + gm.getTheme() + "」でした。"));
                 sendToAllClients(new ResultPacket(new ServerUserData(), gm.getDrawer(), p.getUserData().getName(), gm.getScore(p.getTime()), false));
                 nextGame();
             }
@@ -70,7 +70,7 @@ public class ShareClientsThread extends Thread {
         }
         else {
             String drawer = gm.getNextDrawer();
-            sendToAllClients(new LogPacket(new ServerUserData(), System.currentTimeMillis(), drawer + "さんが描き手です！！！"));
+            sendToAllClients(new LogPacket(new ServerUserData(), System.currentTimeMillis(), drawer + "さんが描き手です！"));
             sendToAllClients(new GameStartPacket(new ServerUserData(), drawer, gm.getNextTheme()));
         }
     }

@@ -44,7 +44,7 @@ public class AnswerPanel extends JPanel {
         JScrollPane scrollPane = new JScrollPane(logArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setBorder(new EtchedBorder(EtchedBorder.LOWERED));
 
-        logAppend(System.currentTimeMillis(), new ServerUserData(), "Welcome to ”おえか木”！！！\r\n解答はひらがなで行ってください。");
+        logAppend(System.currentTimeMillis(), new ServerUserData(), "ようこそ　おえか木　へ！\r\n解答はひらがなで行ってください。");
 
         JPanel inputArea = createInputTextField();
 

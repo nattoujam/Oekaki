@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EtchedBorder;
@@ -46,7 +47,10 @@ public class ServerForm extends JPanel {
             //SoundEffect se = new SoundEffect();
             //se.StartTestSound();
             
-            if(inputName.getText().equals("")) return;
+            if(inputName.getText().equals("")) {
+                JOptionPane.showMessageDialog(null, "名前を入力してください。", "業務連絡", JOptionPane.OK_OPTION);
+                return;
+            }
             client.setName(inputName.getText());
             GameManager gm = new GameManager();
             
