@@ -6,8 +6,10 @@
 package chapter12.Network;
 
 import chapter12.GameManager;
+import chapter12.JTimer;
 import chapter12.Packets.*;
 import chapter12.ServerUserData;
+import chapter12.SoundEffect;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -25,50 +27,60 @@ public class ShareClientsThread extends Thread {
     private final List<ObjectOutputStream> senders;
     private final ObjectInputStream receiver;
     private final GameManager gm;
+    private final SoundEffect se;
     
-    public ShareClientsThread(List<ObjectOutputStream> senders, ObjectInputStream receiver, GameManager gm) {
+    public ShareClientsThread(List<ObjectOutputStream> senders, ObjectInputStream receiver, GameManager gm, SoundEffect se) {
         this.packetSelector = new PacketSelector();
         this.senders = senders;
         this.receiver = receiver;
         this.gm = gm;
+        this.se = se;
         
         packetSelector.addHandler(UserDataPacket.class, p -> {
             sendToAllClients(p);
-            gm.addPlayer(p.getUserData().getName());
+            this.gm.addPlayer(p.getUserData().getName());
         });
         packetSelector.addHandler(MousePressedPacket.class, this::sendToAllClients);
         packetSelector.addHandler(MouseDragPacket.class, this::sendToAllClients);
         packetSelector.addHandler(LayerClearPacket.class, this::sendToAllClients);
-        packetSelector.addHandler(ResultPacket.class, p -> {
-            //時間切れの場合
-            sendToAllClients(p);
-            sendToAllClients(new LogPacket(new ServerUserData(), System.currentTimeMillis(), "時間切れです。\r\nお題は「" + gm.getTheme() + "」でした。"));
-            nextGame();
-        });
         packetSelector.addHandler(GameReadyPacket.class, p -> {
             //ゲーム開始
-            if(gm.readyGame(p.isReady())) {
-                gm.startTimer();
+            if(this.gm.readyGame(p.isReady())) {
+                this.se.gameStartSE();
+                gm.init();
                 nextGame();
             }
         });
         packetSelector.addHandler(LogPacket.class, p -> {
             sendToAllClients(p);
             //正解した場合
-            if(gm.isCollectAnswer(p.getLog())) {
-                sendToAllClients(new LogPacket(new ServerUserData(), p.getTime(), p.getUserData().getName() + "さんが正解しました！\r\nお題は「" + gm.getTheme() + "」でした。"));
-                sendToAllClients(new ResultPacket(new ServerUserData(), gm.getDrawer(), p.getUserData().getName(), gm.getScore(p.getTime()), false));
+            if(this.gm.isCollectAnswer(p.getLog())) {
+                this.se.correctSE();
+                sendToAllClients(new LogPacket(new ServerUserData(), p.getTime(), p.getUserData().getName() + "さんが正解しました！\r\nお題は「" + this.gm.getTheme() + "」でした。"));
+                sendToAllClients(new ResultPacket(new ServerUserData(), this.gm.getDrawer(), p.getUserData().getName(), this.gm.getScore(p.getTime()), false));
                 nextGame();
             }
         });
     }
     
+    public void timeLimitMethod() {
+        //時間切れの場合
+            this.se.uncorrctSE();
+            sendToAllClients(new ResultPacket(new ServerUserData(), null, null, 0, true));
+            sendToAllClients(new LogPacket(new ServerUserData(), System.currentTimeMillis(), "時間切れです。\r\nお題は「" + this.gm.getTheme() + "」でした。"));
+            nextGame();
+    }
+    
     private void nextGame() {
         if(gm.isFinish()) {
             System.out.println("Finish");
-            sendToAllClients(new GameFinishPacket(new ServerUserData()));
+            //timer.stop();
+            sendToAllClients(new LogPacket(new ServerUserData(), System.currentTimeMillis(), "ゲームが終了しました。"));
+            sendToAllClients(new GameFinishPacket(new ServerUserData(), System.currentTimeMillis()));
         }
         else {
+            //timer.start();
+            gm.startTimer();
             String drawer = gm.getNextDrawer();
             sendToAllClients(new LogPacket(new ServerUserData(), System.currentTimeMillis(), drawer + "さんが描き手です！"));
             sendToAllClients(new GameStartPacket(new ServerUserData(), drawer, gm.getNextTheme()));
@@ -94,7 +106,7 @@ public class ShareClientsThread extends Thread {
     }
     
     //クライアント全員に共有
-    private synchronized void sendToAllClients(Packet packet) {
+    synchronized private void sendToAllClients(Packet packet) {
         try {
             for(ObjectOutputStream sender : senders) {
                 System.out.println("Share:" + packet.getUserData().getName() + "(ShareClientsThread)" + " → " + "[" + packet.getClass() + "]");

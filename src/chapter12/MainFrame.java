@@ -17,6 +17,7 @@ import javax.swing.border.EtchedBorder;
  */
 public class MainFrame extends JFrame {
     
+    private final SoundEffect se;
     private final NetworkClient client;
     private final JTextField themeField;
     private final AnswerPanel answerPanel;
@@ -26,8 +27,9 @@ public class MainFrame extends JFrame {
     private final JToggleButton startButton;
     private final JTimer jTimer;
     
-    public MainFrame(NetworkClient client) {
+    public MainFrame(NetworkClient client, SoundEffect se) {
         this.client = client;
+        this.se = se;
         this.setTitle("おえか木");
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -39,23 +41,21 @@ public class MainFrame extends JFrame {
         themeField.setEditable(false);
         themeField.setBorder(new EtchedBorder());
         themeField.setHorizontalAlignment(JTextField.CENTER);
-        this.jTimer = new JTimer(() -> {
-            client.aggregation(new ResultPacket(client.getMyData(), null, null, 0, true));
-        });
+        this.jTimer = new JTimer();
         JPanel gameInfoPanel = new JPanel();
         gameInfoPanel.setLayout(new BorderLayout(5, 5));
         gameInfoPanel.add(Tools.LabeledJComponent("お題", themeField), BorderLayout.CENTER);
         gameInfoPanel.add(Tools.LabeledJComponent("残り", jTimer), BorderLayout.EAST);
         gameInfoPanel.setBounds(5, 5, 300, 20);
         
-        this.answerPanel = new AnswerPanel(client);
+        this.answerPanel = new AnswerPanel(client, se);
         answerPanel.setBounds(5, 140, 300, 460);
         
-        this.drawPanel = new DrawPanel(client);
+        this.drawPanel = new DrawPanel(client, se);
         drawPanel.setBounds(310, 5, 690, 540);
         drawPanel.setInputReception(true);
         
-        this.palettePanel = new PalettePanel();
+        this.palettePanel = new PalettePanel(se);
         palettePanel.setBounds(310, 550, 500, 50);
         palettePanel.addPenUpdater(drawPanel::setPen);
         
@@ -64,6 +64,7 @@ public class MainFrame extends JFrame {
         
         this.startButton = new JToggleButton("ゲーム開始申請");
         startButton.addActionListener(e -> {
+            se.acceptSE();
             String text;
             if(startButton.isSelected()) text = "ゲーム開始待ち";
             else text = "ゲーム開始申請";
@@ -107,7 +108,6 @@ public class MainFrame extends JFrame {
         });
         client.getPacketSelector().addHandler(GameFinishPacket.class, p -> {
             //ゲーム終了
-            client.aggregation(new LogPacket(new ServerUserData(), System.currentTimeMillis(), "ゲームが終了しました。"));
             drawPanel.setInputReception(true);
             jTimer.stop();
             startButton.setEnabled(true);

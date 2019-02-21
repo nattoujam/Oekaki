@@ -24,13 +24,15 @@ import javax.swing.text.*;
  */
 public class AnswerPanel extends JPanel {
 
+    private final SoundEffect se;
     private final JTextPane logArea;
     private JTextField answerArea;
     private final DefaultStyledDocument doc;
     private final NetworkClient client;
 
-    public AnswerPanel(NetworkClient client) {
+    public AnswerPanel(NetworkClient client, SoundEffect se) {
         this.client = client;
+        this.se = se;
         client.getPacketSelector().addHandler(LogPacket.class, p -> logAppend(p.getTime(), p.getUserData(), p.getLog()));
         this.setLayout(new BorderLayout(0, 5));
 
@@ -78,6 +80,7 @@ public class AnswerPanel extends JPanel {
         String log = sdf.format(time) + "<" + d.getName() + ">" + str + "\r\n";
 
         try {
+            if(!d.getName().equals(ServerUserData.SERVER_NAME)) se.receivetSE();
             doc.insertString(doc.getLength(), log, attr);
             logArea.setCaretPosition(doc.getLength());
         }

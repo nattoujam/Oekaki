@@ -8,13 +8,9 @@ package chapter12;
 import chapter12.Network.NetworkClient;
 import chapter12.Packets.ColorPacket;
 import chapter12.Packets.UserDataPacket;
-import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -26,7 +22,7 @@ import javax.swing.border.TitledBorder;
  * @author local-nattou
  */
 public class ClientForm extends JPanel {
-    public ClientForm(JFrame initFrame, JTextField inputName) {
+    public ClientForm(JFrame initFrame, JTextField inputName, SoundEffect se) {
         this.setBorder(new TitledBorder(new EtchedBorder(), "クライアント"));
         GridLayout layout = new GridLayout(3, 1);
         this.setLayout(layout);
@@ -37,8 +33,10 @@ public class ClientForm extends JPanel {
         JButton connection = new JButton("接続");
         
         NetworkClient client = new NetworkClient();
-        MainFrame mainFrame = new MainFrame(client);
+        MainFrame mainFrame = new MainFrame(client, se);
         connection.addActionListener(e -> {
+            se.acceptSE();
+            
             if(inputName.getText().equals("")) {
                 JOptionPane.showMessageDialog(null, "名前を入力してください。", "業務連絡", JOptionPane.OK_OPTION);
                 return;
@@ -59,6 +57,8 @@ public class ClientForm extends JPanel {
             clientReceive.start();
             
             mainFrame.setVisible(true);
+            se.stopBGM();
+            se.mainFrameBGM();
         });
         
         this.add(Tools.LabeledJComponent("ポート", inputPort));

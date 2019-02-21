@@ -19,12 +19,10 @@ import javax.swing.Timer;
  */
 public class JTimer extends JLabel {
     private final Timer timer;
-    private final Runnable runnable;
     private long startTime;
     
-    public <T> JTimer(Runnable runnable) {
+    public JTimer() {
         this.setOpaque(true);
-        this.runnable = runnable;
         this.setText(String.valueOf(GameManager.TIME_LIMIT));
         timer = new Timer(1000, new TimerTick());
     }
@@ -45,14 +43,13 @@ public class JTimer extends JLabel {
         int time = (int) (GameManager.TIME_LIMIT - (current - startTime) / 1000);
         this.setText(String.valueOf(time));
         
-        return (time < 0);
+        return (time <= 0);
     }
     
     private class TimerTick implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             if(putClockForward()) {
-                runnable.run();
                 timer.stop();
             }
         }

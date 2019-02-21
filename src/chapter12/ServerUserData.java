@@ -13,8 +13,8 @@ import java.awt.Color;
  */
 public class ServerUserData extends UserData {
     
-    private static final String SERVER_NAME = "server";
-    private static final Color SERVER_COLOR = new Color(200, 0, 255);
+    public static final String SERVER_NAME = "server";
+    public static final Color SERVER_COLOR = new Color(200, 0, 255);
     
     public ServerUserData() {
         super(SERVER_NAME, SERVER_COLOR);

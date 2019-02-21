@@ -29,7 +29,9 @@ import javax.swing.border.TitledBorder;
  */
 public class ServerForm extends JPanel {
     
-    public ServerForm(JFrame initFrame, JTextField inputName) {
+    public ServerForm(JFrame initFrame, JTextField inputName, SoundEffect se) {
+        //System.setProperty("jdk.tls.client.protocols", "TLSv1");
+        
         this.setBorder(new TitledBorder(new EtchedBorder(), "サーバー"));
         GridLayout layout = new GridLayout(3, 1);
         this.setLayout(layout);
@@ -42,10 +44,9 @@ public class ServerForm extends JPanel {
         
         
         NetworkClient client = new NetworkClient();
-        MainFrame mainFrame = new MainFrame(client);
+        MainFrame mainFrame = new MainFrame(client, se);
         connection.addActionListener(e -> {
-            //SoundEffect se = new SoundEffect();
-            //se.StartTestSound();
+            se.acceptSE();
             
             if(inputName.getText().equals("")) {
                 JOptionPane.showMessageDialog(null, "名前を入力してください。", "業務連絡", JOptionPane.OK_OPTION);
@@ -62,7 +63,7 @@ public class ServerForm extends JPanel {
                 client.aggregation(new UserDataPacket(you));
             });
             
-            Thread establishConnection = new Thread(new NetworkServer(Integer.parseInt(inputPort.getText()), (int)numOfPlayer.getSelectedItem(), gm));
+            Thread establishConnection = new Thread(new NetworkServer(Integer.parseInt(inputPort.getText()), (int)numOfPlayer.getSelectedItem(), gm, se));
             establishConnection.start();
 
             client.connect("localhost", Integer.parseInt(inputPort.getText()));
@@ -72,6 +73,8 @@ public class ServerForm extends JPanel {
             //JOptionPane.showMessageDialog(null, getIP(), "Your IP address", JOptionPane.PLAIN_MESSAGE);
             
             mainFrame.setVisible(true);
+            se.stopBGM();
+            se.mainFrameBGM();
         });
         
         this.add(Tools.LabeledJComponent("ポート", inputPort));

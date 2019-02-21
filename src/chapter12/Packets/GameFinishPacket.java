@@ -13,7 +13,17 @@ import chapter12.UserData;
  */
 public class GameFinishPacket extends Packet {
     
-    public GameFinishPacket(UserData sender) {
+    private final long finishTime;
+    
+    public GameFinishPacket(UserData sender, long time) {
         super(sender);
+        this.finishTime = time;
+    }
+
+    /**
+     * @return the finishTime
+     */
+    public long getFinishTime() {
+        return finishTime;
     }
 }

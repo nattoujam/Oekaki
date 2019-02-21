@@ -23,7 +23,7 @@ public class DrawPanel extends JPanel {
     private final MouseInput mi;
     private final JButton reset;
 
-    public DrawPanel(NetworkClient client) {
+    public DrawPanel(NetworkClient client, SoundEffect se) {
         this.setLayout(new BorderLayout(0, 5));
 
         this.dCom = new DrawComponent();
@@ -36,6 +36,7 @@ public class DrawPanel extends JPanel {
         this.reset = new JButton("レイヤークリア");
         reset.setFocusPainted(false);
         reset.addActionListener(e -> {
+            se.acceptSE();
             dCom.clear();
             client.aggregation(new LayerClearPacket(client.getMyData()));
         });

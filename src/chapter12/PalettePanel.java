@@ -25,12 +25,14 @@ import javax.swing.JPanel;
  */
 public class PalettePanel extends JPanel implements Palette {
 
+    private final SoundEffect se;
     private Pen pen = new CirclePen();
     private Color color = Color.BLACK;
     private int radius = 5;
     private Consumer<Pen> penUppdater;
 
-    public PalettePanel() {
+    public PalettePanel(SoundEffect se) {
+        this.se = se;
         this.setLayout(new BorderLayout(5, 0));
         this.add(createColorPalette(), BorderLayout.CENTER);
         this.add(createPenPanel(), BorderLayout.EAST);
@@ -86,6 +88,7 @@ public class PalettePanel extends JPanel implements Palette {
 
         for (PenButton p : list) {
             p.addActionListener(e -> {
+                se.acceptSE();
                 color = p.getColor();
                 updatePen();
                 for (PenButton b : list) {

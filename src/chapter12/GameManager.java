@@ -7,9 +7,12 @@ package chapter12;
 
 import chapter12.Network.NetworkClient;
 import chapter12.Packets.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import javax.swing.Timer;
 
 /**
  *
@@ -23,11 +26,14 @@ public class GameManager {
     private String drawer;
     private long startTime;
     private int readyCount = 0;
-    public static final int TIME_LIMIT = 120;
+    private Timer timer;
+    private Runnable runnable;
+    public static final int TIME_LIMIT = 10;
     private static final int MAX_SCORE = 300;
     
     public GameManager() {
         players = new ArrayList<>();
+        timer = new Timer(1000, new TimerTick());
     }
     
     public String getNextDrawer() {
@@ -51,14 +57,20 @@ public class GameManager {
         players.add(name);
     }
     
+    public void init() {
+        tempPlayers = new ArrayList<>(players);
+        tempPlayers.addAll(players);
+        readyCount = 0;
+    }
+    
     public boolean isCollectAnswer(String answer) {
         return getTheme().equals(answer);
     } 
     
     public void startTimer() {
-        init();
         //タイマースタート
         this.startTime = System.currentTimeMillis();
+        timer.start();
     }
     
     public int getScore(long answeredTime) {
@@ -67,9 +79,14 @@ public class GameManager {
         return (time < TIME_LIMIT) ? MAX_SCORE - (MAX_SCORE / TIME_LIMIT) * time : 0;
     } 
     
+    public boolean isTimeLimit() {
+        return (System.currentTimeMillis() - startTime) / 1000 >= TIME_LIMIT;
+    }
+    
     public boolean isFinish() {
         if(tempPlayers.isEmpty()) {
             theme = "";
+            timer.stop();
             return true;
         }
         else {
@@ -83,10 +100,19 @@ public class GameManager {
         return (readyCount == players.size());
     }
     
-    private void init() {
-        tempPlayers = new ArrayList<>(players);
-        tempPlayers.addAll(players);
-        readyCount = 0;
+    public void addTimeLimitMethid(Runnable runnable) {
+        this.runnable = runnable;
+    }
+    
+    private class TimerTick implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            System.out.println("GM:" + (System.currentTimeMillis() - startTime) / 1000);
+            if(isTimeLimit()) {
+                timer.stop();
+                runnable.run();
+            }
+        }
     }
 
     /**

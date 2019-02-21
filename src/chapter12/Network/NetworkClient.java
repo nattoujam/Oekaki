@@ -50,7 +50,7 @@ public class NetworkClient implements Runnable {
     }
     
     //サーバーに集約
-    public synchronized void aggregation(Packet p) {
+    synchronized public void aggregation(Packet p) {
         try {
             System.out.println("aggregation:" + p.getUserData().getName() + "(Client) → [" + p.getClass() + "]");
             sender.writeObject(p);
@@ -78,7 +78,7 @@ public class NetworkClient implements Runnable {
         try {
             //サーバーから受信
             while(true) {
-                Packet packet = (Packet)receiver.readObject();
+                Packet packet = (Packet) receiver.readObject();
                 System.out.println("Receive at " + myName + "(Client)");
                 if(packet.getUserData().getName().equals(myName)) {
                     System.out.println("Ignore reception");

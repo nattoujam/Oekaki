@@ -7,19 +7,11 @@ package chapter12;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.FlowLayout;
 import java.awt.GridLayout;
-import java.awt.Image;
-import java.awt.Toolkit;
-import java.io.IOException;
-import java.io.InputStream;
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.CompoundBorder;
-import javax.swing.border.EtchedBorder;
 import javax.swing.border.LineBorder;
-import javax.swing.border.SoftBevelBorder;
 
 /**
  *
@@ -35,11 +27,6 @@ public class Main {
     
     public Main() {
         ImageIcon image = new ImageIcon(getClass().getResource("/Image/frontpage.png"));
-        //try (InputStream inputStream = getClass().getResourceAsStream("frontpage.png")) {
-        //    image = ImageIO.read(inputStream);
-        //} catch (IOException e) {
-        //    e.printStackTrace();
-        //}
             
         final JFrame initFrame = new JFrame();
         initFrame.setLocationRelativeTo(null);
@@ -48,13 +35,14 @@ public class Main {
         initFrame.setLayout(null);
         initFrame.setResizable(false);
 
+        SoundEffect se = new SoundEffect();
 
         //ここから最初の画面
         JTextField inputName = new JTextField("");
         inputName.setHorizontalAlignment(JTextField.CENTER);
         
-        ServerForm serverForm = new ServerForm(initFrame, inputName);
-        ClientForm clientForm = new ClientForm(initFrame, inputName);
+        ServerForm serverForm = new ServerForm(initFrame, inputName, se);
+        ClientForm clientForm = new ClientForm(initFrame, inputName, se);
         JPanel networkForm = new JPanel();
         GridLayout layout = new GridLayout(1, 2);
         layout.setHgap(10);
@@ -85,6 +73,7 @@ public class Main {
         initFrame.add(imageLabel);
         initFrame.setVisible(true);
         //ここまで
+        se.frontPageBGM();
 
 
 

@@ -9,6 +9,7 @@ import chapter12.GameManager;
 import chapter12.Packets.ColorPacket;
 import chapter12.Packets.Packet;
 import chapter12.ServerUserData;
+import chapter12.SoundEffect;
 import java.awt.Color;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -35,8 +36,9 @@ public class NetworkServer implements Runnable {
     private final int numOfClients; 
     private final List<Color> colors;
     private final GameManager gm;
+    private final SoundEffect se;
     
-    public NetworkServer(int port, int numOfClients, GameManager gm) {
+    public NetworkServer(int port, int numOfClients, GameManager gm, SoundEffect se) {
         this.port = port;
         this.senders = new ArrayList<>();
         this.receivers = new ArrayList<>();
@@ -47,6 +49,7 @@ public class NetworkServer implements Runnable {
         colors.add(Color.ORANGE);
         colors.add(Color.MAGENTA);
         this.gm = gm;
+        this.se = se;
     }
     
     //クライアント追加
@@ -80,7 +83,8 @@ public class NetworkServer implements Runnable {
     }
     
     private void startClientReceiverThread(ObjectInputStream receiver) {
-        Thread thread = new ShareClientsThread(senders, receiver, gm);
+        ShareClientsThread thread = new ShareClientsThread(senders, receiver, gm, se);
+        gm.addTimeLimitMethid(thread::timeLimitMethod);
         thread.start();
         System.out.println("start ClientReceiverThread");
     }
