@@ -5,6 +5,9 @@
  */
 package chapter12;
 
+import chapter12.Network.NetworkClient;
+import chapter12.Network.PacketSelector;
+import chapter12.Packets.SEPacket;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -28,6 +31,10 @@ import javax.sound.midi.Track;
  * @author local-nattou
  */
 public class SoundEffect {
+    
+    public static final int GAME_START = 0;
+    public static final int CORRECT = 1;
+    public static final int UNCORRECT = 2;
     
     private final Sequencer himawariBGM;
     private final Sequencer airsulgBGM;
@@ -57,6 +64,20 @@ public class SoundEffect {
         receiveSE = makeFromMessage(temp);
     }
     
+    public void playSE(SEPacket p) {
+        switch(p.getSEName()) {
+            case GAME_START:
+                gameStartSE();
+                break;
+            case CORRECT:
+                correctSE();
+                break;
+            case UNCORRECT:
+                uncorrctSE();
+                break;
+        }
+    }
+    
     public void acceptSE() {
         acceptSE.setTickPosition(0);
         acceptSE.start();
@@ -65,6 +86,11 @@ public class SoundEffect {
     public void receivetSE() {
         receiveSE.setTickPosition(0);
         receiveSE.start();
+    }
+    
+    public void fanfareSE() {
+        fanfareSE.setTickPosition(0);
+        fanfareSE.start();
     }
     
     public void gameStartSE() {

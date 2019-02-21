@@ -36,9 +36,8 @@ public class NetworkServer implements Runnable {
     private final int numOfClients; 
     private final List<Color> colors;
     private final GameManager gm;
-    private final SoundEffect se;
     
-    public NetworkServer(int port, int numOfClients, GameManager gm, SoundEffect se) {
+    public NetworkServer(int port, int numOfClients, GameManager gm) {
         this.port = port;
         this.senders = new ArrayList<>();
         this.receivers = new ArrayList<>();
@@ -49,7 +48,6 @@ public class NetworkServer implements Runnable {
         colors.add(Color.ORANGE);
         colors.add(Color.MAGENTA);
         this.gm = gm;
-        this.se = se;
     }
     
     //クライアント追加
@@ -83,7 +81,7 @@ public class NetworkServer implements Runnable {
     }
     
     private void startClientReceiverThread(ObjectInputStream receiver) {
-        ShareClientsThread thread = new ShareClientsThread(senders, receiver, gm, se);
+        ShareClientsThread thread = new ShareClientsThread(senders, receiver, gm);
         gm.addTimeLimitMethid(thread::timeLimitMethod);
         thread.start();
         System.out.println("start ClientReceiverThread");

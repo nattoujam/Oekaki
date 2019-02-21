@@ -7,6 +7,7 @@ package chapter12;
 
 import chapter12.Network.NetworkClient;
 import chapter12.Packets.ColorPacket;
+import chapter12.Packets.SEPacket;
 import chapter12.Packets.UserDataPacket;
 import java.awt.GridLayout;
 import javax.swing.JButton;
@@ -51,6 +52,7 @@ public class ClientForm extends JPanel {
                 mainFrame.init(you);
                 client.aggregation(new UserDataPacket(you));
             });
+            client.getPacketSelector().addHandler(SEPacket.class, se::playSE);
             
             client.connect(inputIP.getText(), Integer.parseInt(inputPort.getText()));
             Thread clientReceive = new Thread(client);

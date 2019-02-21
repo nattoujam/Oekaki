@@ -27,14 +27,12 @@ public class ShareClientsThread extends Thread {
     private final List<ObjectOutputStream> senders;
     private final ObjectInputStream receiver;
     private final GameManager gm;
-    private final SoundEffect se;
     
-    public ShareClientsThread(List<ObjectOutputStream> senders, ObjectInputStream receiver, GameManager gm, SoundEffect se) {
+    public ShareClientsThread(List<ObjectOutputStream> senders, ObjectInputStream receiver, GameManager gm) {
         this.packetSelector = new PacketSelector();
         this.senders = senders;
         this.receiver = receiver;
         this.gm = gm;
-        this.se = se;
         
         packetSelector.addHandler(UserDataPacket.class, p -> {
             sendToAllClients(p);
@@ -46,7 +44,7 @@ public class ShareClientsThread extends Thread {
         packetSelector.addHandler(GameReadyPacket.class, p -> {
             //ゲーム開始
             if(this.gm.readyGame(p.isReady())) {
-                this.se.gameStartSE();
+                sendToAllClients(new SEPacket(new ServerUserData(), SoundEffect.GAME_START));
                 gm.init();
                 nextGame();
             }
@@ -55,7 +53,7 @@ public class ShareClientsThread extends Thread {
             sendToAllClients(p);
             //正解した場合
             if(this.gm.isCollectAnswer(p.getLog())) {
-                this.se.correctSE();
+                sendToAllClients(new SEPacket(new ServerUserData(), SoundEffect.CORRECT));
                 sendToAllClients(new LogPacket(new ServerUserData(), p.getTime(), p.getUserData().getName() + "さんが正解しました！\r\nお題は「" + this.gm.getTheme() + "」でした。"));
                 sendToAllClients(new ResultPacket(new ServerUserData(), this.gm.getDrawer(), p.getUserData().getName(), this.gm.getScore(p.getTime()), false));
                 nextGame();
@@ -65,7 +63,7 @@ public class ShareClientsThread extends Thread {
     
     public void timeLimitMethod() {
         //時間切れの場合
-            this.se.uncorrctSE();
+            sendToAllClients(new SEPacket(new ServerUserData(), SoundEffect.UNCORRECT));
             sendToAllClients(new ResultPacket(new ServerUserData(), null, null, 0, true));
             sendToAllClients(new LogPacket(new ServerUserData(), System.currentTimeMillis(), "時間切れです。\r\nお題は「" + this.gm.getTheme() + "」でした。"));
             nextGame();
