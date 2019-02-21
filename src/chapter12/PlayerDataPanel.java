@@ -12,8 +12,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.border.EtchedBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 
@@ -46,6 +44,10 @@ public class PlayerDataPanel extends JPanel {
     public void addPlayer(UserData userData) {
         Object[] row = {userData.getColor(), userData.getName(), 0};
         dataModel.addRow(row);
+    }
+    
+    public int getNumOfPlayers() {
+        return dataModel.getRowCount();
     }
     
     public void setScore(String name, int score) {

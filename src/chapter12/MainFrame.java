@@ -69,6 +69,7 @@ public class MainFrame extends JFrame {
             if(startButton.isSelected()) text = "ゲーム開始待ち";
             else text = "ゲーム開始申請";
             startButton.setText(text);
+            if(pdPanel.getNumOfPlayers() == 1) return;
             client.aggregation(new GameReadyPacket(client.getMyData(), startButton.isSelected()));
         });
         startButton.setBounds(815, 550, 185, 50);

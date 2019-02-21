@@ -39,7 +39,7 @@ public class ServerForm extends JPanel {
         layout.setVgap(10);
         
         JTextField inputPort = new JTextField("100");
-        Integer[] select = {1, 2, 3};
+        Integer[] select = {1, 2, 3, 4};
         JComboBox numOfPlayer = new JComboBox(select);
         JButton connection = new JButton("開放");
         

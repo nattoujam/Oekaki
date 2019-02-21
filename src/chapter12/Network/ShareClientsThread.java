@@ -50,6 +50,7 @@ public class ShareClientsThread extends Thread {
         });
         packetSelector.addHandler(LogPacket.class, p -> {
             sendToAllClients(p);
+            if(p.getUserData().getName().equals(gm.getDrawer())) return;
             //正解した場合
             if(this.gm.isCollectAnswer(p.getLog())) {
                 sendToAllClients(new SEPacket(new ServerUserData(), SoundEffect.CORRECT));
