@@ -47,7 +47,9 @@ public class SoundEffect {
     
     public SoundEffect() {
         himawariBGM = makeFromPath(getClass().getResource("/Mediafile/himawari.mid"));
+        himawariBGM.setLoopCount(Sequencer.LOOP_CONTINUOUSLY);
         airsulgBGM = makeFromPath(getClass().getResource("/Mediafile/airsulg.mid"));
+        airsulgBGM.setLoopCount(Sequencer.LOOP_CONTINUOUSLY);
         fanfareSE = makeFromPath(getClass().getResource("/Mediafile/futta-fanfare.mid"));
         gameStartSE = new AudioClip(getClass().getResource("/Mediafile/by_chance.mp3").toString());
         correctSE = new AudioClip(getClass().getResource("/Mediafile/crrect_answer2.mp3").toString());
@@ -124,7 +126,6 @@ public class SoundEffect {
         Sequencer seq = null;
         try {
             seq = MidiSystem.getSequencer();
-            seq.setLoopCount(Sequencer.LOOP_CONTINUOUSLY);
             seq.open();
             Sequence sequence = MidiSystem.getSequence(path);
             seq.setSequence(sequence);

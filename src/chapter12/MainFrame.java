@@ -108,6 +108,7 @@ public class MainFrame extends JFrame {
         });
         client.getPacketSelector().addHandler(GameFinishPacket.class, p -> {
             //ゲーム終了
+            se.fanfareSE();
             drawPanel.setInputReception(true);
             jTimer.stop();
             startButton.setEnabled(true);

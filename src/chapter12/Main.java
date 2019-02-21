@@ -74,11 +74,5 @@ public class Main {
         initFrame.setVisible(true);
         //ここまで
         se.frontPageBGM();
-
-
-
-        //frame.pack();
-        //frame.getContentPane().add(drawPanel);
-        //frame.setVisible(true);
     }
 }
