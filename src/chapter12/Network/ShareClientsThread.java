@@ -44,6 +44,7 @@ public class ShareClientsThread extends Thread {
             //ゲーム開始
             if(this.gm.readyGame(p.isReady())) {
                 sendToAllClients(new SEPacket(new ServerUserData(), SoundEffect.GAME_START));
+                sendToAllClients(new DoneWithReadyPacket(new ServerUserData()));
                 gm.init();
                 nextGame();
             }

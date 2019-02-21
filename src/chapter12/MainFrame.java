@@ -87,8 +87,11 @@ public class MainFrame extends JFrame {
         client.getPacketSelector().addHandler(UserDataPacket.class, p -> {
             pdPanel.addPlayer(p.getUserData());
         });
-        client.getPacketSelector().addHandler(GameStartPacket.class, p -> {
+        client.getPacketSelector().addHandler(DoneWithReadyPacket.class, p -> {
             startButton.setEnabled(false);
+            pdPanel.resetScore();
+        });
+        client.getPacketSelector().addHandler(GameStartPacket.class, p -> {
             jTimer.start();
             if(data.getName().equals(p.getDrawer())) {
                 themeField.setText(p.getTheme());

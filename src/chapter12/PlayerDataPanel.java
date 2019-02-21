@@ -60,6 +60,12 @@ public class PlayerDataPanel extends JPanel {
         }
     }
     
+    public void resetScore() {
+        for(int i = 0; i < dataTable.getRowCount(); i++) {
+            dataModel.setValueAt(0, i, dataTable.getColumn("得点").getModelIndex());
+        }
+    }
+    
     public String getWinner() {
         int bestScore = 0;
         int bestScoreIndex = 0;

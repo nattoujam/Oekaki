@@ -57,8 +57,9 @@ public class MouseInput implements MouseMotionListener, MouseListener {
     @Override
     public void mouseDragged(MouseEvent e) {
         if(canReception) {
-            draw(e.getPoint(), pen);
-            client.aggregation(new MouseDragPacket(client.getMyData(), e.getPoint()));
+            //draw(e.getPoint(), pen);
+            //client.aggregation(new MouseDragPacket(client.getMyData(), e.getPoint()));
+            client.aggregation(new MouseDragPacket(new ServerUserData(), e.getPoint()));
         }
     }
 
@@ -75,10 +76,10 @@ public class MouseInput implements MouseMotionListener, MouseListener {
     @Override
     public void mousePressed(MouseEvent e) {
         if(canReception) {
-            drawInit(e.getPoint(), pen);
+            //drawInit(e.getPoint(), pen);
             System.out.println("send(" + pen.getColor() + ")");
-            Pen sendPen = pen;
-            client.aggregation(new MousePressedPacket(client.getMyData(), sendPen, e.getPoint()));
+            //client.aggregation(new MousePressedPacket(client.getMyData(), pen, e.getPoint()));
+            client.aggregation(new MousePressedPacket(new ServerUserData(), pen, e.getPoint()));
         }
     }
 
