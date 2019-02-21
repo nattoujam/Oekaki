@@ -9,6 +9,7 @@ import chapter12.GameManager;
 import chapter12.Packets.*;
 import chapter12.ServerUserData;
 import chapter12.SoundEffect;
+import chapter12.UserData;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -35,7 +36,7 @@ public class ShareClientsThread extends Thread {
         
         packetSelector.addHandler(UserDataPacket.class, p -> {
             sendToAllClients(p);
-            this.gm.addPlayer(p.getUserData().getName());
+            this.gm.addPlayer(p.getUserData());
         });
         packetSelector.addHandler(MousePressedPacket.class, this::sendToAllClients);
         packetSelector.addHandler(MouseDragPacket.class, this::sendToAllClients);
@@ -51,12 +52,12 @@ public class ShareClientsThread extends Thread {
         });
         packetSelector.addHandler(LogPacket.class, p -> {
             sendToAllClients(p);
-            if(p.getUserData().getName().equals(gm.getDrawer())) return;
+            if(p.getUserData().getName().equals(gm.getDrawerData().getName())) return;
             //正解した場合
             if(this.gm.isCollectAnswer(p.getLog())) {
                 sendToAllClients(new SEPacket(new ServerUserData(), SoundEffect.CORRECT));
-                sendToAllClients(new LogPacket(new ServerUserData(), p.getTime(), p.getUserData().getName() + "さんが正解しました！\r\nお題は「" + this.gm.getTheme() + "」でした。"));
-                sendToAllClients(new ResultPacket(new ServerUserData(), this.gm.getDrawer(), p.getUserData().getName(), this.gm.getScore(p.getTime()), false));
+                sendToAllClients(new LogPacket(new ServerUserData(), p.getTime(), p.getUserData().getDispName() + "さんが正解しました！\r\nお題は「" + this.gm.getTheme() + "」でした。"));
+                sendToAllClients(new ResultPacket(new ServerUserData(), this.gm.getDrawerData().getDispName(), p.getUserData().getDispName(), this.gm.getScore(p.getTime()), false));
                 nextGame();
             }
         });
@@ -81,8 +82,8 @@ public class ShareClientsThread extends Thread {
         else {
             //timer.start();
             gm.startTimer();
-            String drawer = gm.getNextDrawer();
-            sendToAllClients(new LogPacket(new ServerUserData(), System.currentTimeMillis(), drawer + "さんが描き手です！"));
+            UserData drawer = gm.getNextDrawerData();
+            sendToAllClients(new LogPacket(new ServerUserData(), System.currentTimeMillis(), drawer.getDispName() + "さんが描き手です！"));
             sendToAllClients(new GameStartPacket(new ServerUserData(), drawer, gm.getNextTheme()));
         }
     }

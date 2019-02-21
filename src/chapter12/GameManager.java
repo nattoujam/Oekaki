@@ -20,10 +20,10 @@ import javax.swing.Timer;
  */
 public class GameManager {
     
-    private final List<String> players;
-    private List<String> tempPlayers;
+    private final List<UserData> playerData;
+    private List<UserData> tempPlayerData;
     private String theme = "";
-    private String drawer;
+    private UserData drawerData;
     private long startTime;
     private int readyCount = 0;
     private Timer timer;
@@ -32,18 +32,18 @@ public class GameManager {
     private static final int MAX_SCORE = 300;
     
     public GameManager() {
-        players = new ArrayList<>();
+        playerData = new ArrayList<>();
         timer = new Timer(1000, new TimerTick());
     }
     
-    public String getNextDrawer() {
+    public UserData getNextDrawerData() {
         startTime = System.currentTimeMillis();
         Random rand = new Random();
-        int index = rand.nextInt(tempPlayers.size());
-        drawer = tempPlayers.get(index);
-        tempPlayers.remove(index);
+        int index = rand.nextInt(tempPlayerData.size());
+        drawerData = tempPlayerData.get(index);
+        tempPlayerData.remove(index);
         
-        return getDrawer();
+        return getDrawerData();
     }
     
     public String getNextTheme() {
@@ -53,13 +53,13 @@ public class GameManager {
         return getTheme();
     }
     
-    public void addPlayer(String name) {
-        players.add(name);
+    public void addPlayer(UserData data) {
+        playerData.add(data);
     }
     
     public void init() {
-        tempPlayers = new ArrayList<>(players);
-        tempPlayers.addAll(players);
+        tempPlayerData = new ArrayList<>(playerData);
+        tempPlayerData.addAll(playerData);
         readyCount = 0;
     }
     
@@ -84,7 +84,7 @@ public class GameManager {
     }
     
     public boolean isFinish() {
-        if(tempPlayers.isEmpty()) {
+        if(tempPlayerData.isEmpty()) {
             theme = "";
             timer.stop();
             return true;
@@ -97,7 +97,7 @@ public class GameManager {
     public boolean readyGame(boolean isReady) {
         readyCount += (isReady) ? 1 : -1;
         System.out.println("#####" + readyCount + "#####");
-        return (readyCount == players.size());
+        return (readyCount == playerData.size());
     }
     
     public void addTimeLimitMethid(Runnable runnable) {
@@ -118,8 +118,8 @@ public class GameManager {
     /**
      * @return the drawer
      */
-    public String getDrawer() {
-        return drawer;
+    public UserData getDrawerData() {
+        return drawerData;
     }
 
     /**
@@ -166,9 +166,5 @@ public class GameManager {
         まんちかん,
         かいちゅうでんとう,
         はいぽーしょん
-    }
-
-    public GameManager(List<String> players) {
-        this.players = players;
     }
 }

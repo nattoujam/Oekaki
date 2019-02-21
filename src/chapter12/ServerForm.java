@@ -55,12 +55,15 @@ public class ServerForm extends JPanel {
                 JOptionPane.showMessageDialog(null, "名前を入力してください。", "業務連絡", JOptionPane.OK_OPTION);
                 return;
             }
-            client.setName(inputName.getText());
+            
+            String name = inputName.getText() + "-" +System.currentTimeMillis();
+            
+            client.setName(name);
             GameManager gm = new GameManager();
             
             initFrame.setVisible(false);
             client.getPacketSelector().addHandler(ColorPacket.class, p -> {
-                UserData you = new UserData(inputName.getText(), p.getColor());
+                UserData you = new UserData(name, p.getColor());
                 client.setMyData(you);
                 mainFrame.init(you);
                 client.aggregation(new UserDataPacket(you));

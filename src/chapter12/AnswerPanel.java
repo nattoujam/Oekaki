@@ -77,7 +77,7 @@ public class AnswerPanel extends JPanel {
         SimpleAttributeSet attr = new SimpleAttributeSet();
         StyleConstants.setForeground(attr, d.getColor());
 
-        String log = sdf.format(time) + "<" + d.getName() + ">" + str + "\r\n";
+        String log = sdf.format(time) + "<" + d.getDispName() + ">" + str + "\r\n";
 
         try {
             if(!d.getName().equals(ServerUserData.SERVER_NAME)) se.receivetSE();

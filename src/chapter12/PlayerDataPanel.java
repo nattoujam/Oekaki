@@ -42,7 +42,7 @@ public class PlayerDataPanel extends JPanel {
     }
     
     public void addPlayer(UserData userData) {
-        Object[] row = {userData.getColor(), userData.getName(), 0};
+        Object[] row = {userData.getColor(), userData.getDispName(), 0};
         dataModel.addRow(row);
     }
     

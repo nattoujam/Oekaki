@@ -45,11 +45,13 @@ public class ClientForm extends JPanel {
                 return;
             }
             
+            String name = inputName.getText() + "-" + System.currentTimeMillis();
+            
             initFrame.setVisible(false);
-            client.setName(inputName.getText());
+            client.setName(name);
             
             client.getPacketSelector().addHandler(ColorPacket.class, p -> {
-                UserData you = new UserData(inputName.getText(), p.getColor());
+                UserData you = new UserData(name, p.getColor());
                 client.setMyData(you);
                 mainFrame.init(you);
                 client.aggregation(new UserDataPacket(you));

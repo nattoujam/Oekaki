@@ -14,16 +14,28 @@ import java.io.Serializable;
  */
 public class UserData implements Serializable {
 
-    private String name = "defaultName";
-    private Color color = Color.BLACK;
+    protected final String realName;
+    private final String dispName;
+    protected final Color color;
     
     public UserData(String n, Color c) {
-        this.name = n;
+        String[] splits = n.split("-", -1);
+        String temp = "";
+        for(int i = 0; i < splits.length - 1; i++) {
+            temp += splits[i];
+        }
+                
+        this.dispName = temp;
+        this.realName = n;
         this.color = c;
+    }
+    
+    public String getDispName() {
+        return this.dispName;
     }
 
     public String getName() {
-        return this.name;
+        return this.realName;
     }
 
     public Color getColor() {

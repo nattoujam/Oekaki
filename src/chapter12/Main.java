@@ -29,6 +29,7 @@ public class Main {
         ImageIcon image = new ImageIcon(getClass().getResource("/Image/frontpage.png"));
             
         final JFrame initFrame = new JFrame();
+        initFrame.setTitle("おえか木");
         initFrame.setLocationRelativeTo(null);
         initFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         initFrame.setBounds(50, 50, 1025, 650);

@@ -87,13 +87,15 @@ public class MainFrame extends JFrame {
         client.getPacketSelector().addHandler(UserDataPacket.class, p -> {
             pdPanel.addPlayer(p.getUserData());
         });
+        //ゲーム開始準備（一番最初）
         client.getPacketSelector().addHandler(DoneWithReadyPacket.class, p -> {
             startButton.setEnabled(false);
             pdPanel.resetScore();
         });
+        //ゲーム開始
         client.getPacketSelector().addHandler(GameStartPacket.class, p -> {
             jTimer.start();
-            if(data.getName().equals(p.getDrawer())) {
+            if(data.getName().equals(p.getDrawer().getName())) {
                 themeField.setText(p.getTheme());
                 drawPanel.setInputReception(true);
                 
@@ -105,13 +107,13 @@ public class MainFrame extends JFrame {
                 //JOptionPane.showMessageDialog(null, "あなたは解答者です。", client.getMyData().getName() + "さんへ", JOptionPane.PLAIN_MESSAGE);
             }
         });
+        //得点の付与
         client.getPacketSelector().addHandler(ResultPacket.class, p -> {
-            //得点の付与
             pdPanel.setScore(p.getRespondent(), p.getScore());
             pdPanel.setScore(p.getDrawer(), p.getScore());
         });
+        //ゲーム終了
         client.getPacketSelector().addHandler(GameFinishPacket.class, p -> {
-            //ゲーム終了
             se.fanfareSE();
             drawPanel.setInputReception(true);
             jTimer.stop();

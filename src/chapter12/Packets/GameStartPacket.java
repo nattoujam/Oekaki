@@ -14,12 +14,12 @@ import chapter12.UserData;
  */
 public class GameStartPacket extends Packet {
     
-    private String drawer;
+    private UserData drawerData;
     private String theme;
     
-    public GameStartPacket(UserData sender, String drawer, String theme) {
+    public GameStartPacket(UserData sender, UserData drawer, String theme) {
         super(sender);
-        this.drawer = drawer;
+        this.drawerData = drawer;
         this.theme = theme;
     }
 
@@ -30,8 +30,8 @@ public class GameStartPacket extends Packet {
     /**
      * @return the drawer
      */
-    public String getDrawer() {
-        return drawer;
+    public UserData getDrawer() {
+        return drawerData;
     }
 
     /**
