@@ -5,6 +5,7 @@
  */
 package chapter12.Network;
 
+import chapter12.Packets.ClosedPacket;
 import chapter12.Packets.ColorPacket;
 import chapter12.Packets.Packet;
 import chapter12.Packets.UserDataPacket;
@@ -16,6 +17,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -23,7 +25,7 @@ import java.util.logging.Logger;
  */
 
 //client
-public class NetworkClient implements Runnable {
+public class NetworkClient implements Runnable{
 
     private final PacketSelector packetSelector;
     
@@ -35,6 +37,11 @@ public class NetworkClient implements Runnable {
     
     public NetworkClient() {
         packetSelector = new PacketSelector();
+        packetSelector.addHandler(ClosedPacket.class, p -> {
+            JOptionPane.showMessageDialog(null, "切断されました。\r\nアプリケーションを終了します。", "業務連絡", JOptionPane.PLAIN_MESSAGE);
+            //this.close();
+            System.exit(0);
+        });
     }
     
     //サーバーに接続

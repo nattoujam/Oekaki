@@ -60,6 +60,7 @@ public class ShareClientsThread extends Thread {
                 nextGame();
             }
         });
+        packetSelector.addHandler(ClosedPacket.class, this::sendToAllClients);
     }
     
     public void timeLimitMethod() {

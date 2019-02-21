@@ -6,9 +6,11 @@
 package chapter12;
 
 import chapter12.Network.NetworkClient;
+import chapter12.Packets.ClosedPacket;
 import chapter12.Packets.ColorPacket;
 import chapter12.Packets.SEPacket;
 import chapter12.Packets.UserDataPacket;
+import java.awt.Color;
 import java.awt.GridLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -57,6 +59,12 @@ public class ClientForm extends JPanel {
             client.connect(inputIP.getText(), Integer.parseInt(inputPort.getText()));
             Thread clientReceive = new Thread(client);
             clientReceive.start();
+            
+            WindowClosing wc = new WindowClosing(() -> {
+                client.aggregation(new ClosedPacket(new ServerUserData()));
+                //client.close();
+            });
+            mainFrame.addWindowListener(wc);
             
             mainFrame.setVisible(true);
             se.stopBGM();

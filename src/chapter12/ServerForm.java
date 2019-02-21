@@ -7,9 +7,11 @@ package chapter12;
 
 import chapter12.Network.NetworkServer;
 import chapter12.Network.NetworkClient;
+import chapter12.Packets.ClosedPacket;
 import chapter12.Packets.ColorPacket;
 import chapter12.Packets.SEPacket;
 import chapter12.Packets.UserDataPacket;
+import java.awt.Color;
 import java.awt.GridLayout;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -65,7 +67,8 @@ public class ServerForm extends JPanel {
             });
             client.getPacketSelector().addHandler(SEPacket.class, se::playSE);
             
-            Thread establishConnection = new Thread(new NetworkServer(Integer.parseInt(inputPort.getText()), (int)numOfPlayer.getSelectedItem(), gm));
+            NetworkServer server = new NetworkServer(Integer.parseInt(inputPort.getText()), (int)numOfPlayer.getSelectedItem(), gm);
+            Thread establishConnection = new Thread(server);
             establishConnection.start();
 
             client.connect("localhost", Integer.parseInt(inputPort.getText()));
@@ -73,6 +76,13 @@ public class ServerForm extends JPanel {
             clientRecieve.start();
             
             //JOptionPane.showMessageDialog(null, getIP(), "Your IP address", JOptionPane.PLAIN_MESSAGE);
+            
+            WindowClosing wc = new WindowClosing(() -> {
+                client.aggregation(new ClosedPacket(new ServerUserData()));
+                //client.close();
+                //server.close();
+            });
+            mainFrame.addWindowListener(wc);
             
             mainFrame.setVisible(true);
             se.stopBGM();
