@@ -45,7 +45,7 @@ public class NetworkServer implements Runnable {
         this.colors = new ArrayList<>();
         colors.add(Color.RED);
         colors.add(Color.BLUE);
-        colors.add(Color.ORANGE);
+        colors.add(new Color(20, 90, 40));
         colors.add(Color.MAGENTA);
         this.gm = gm;
     }

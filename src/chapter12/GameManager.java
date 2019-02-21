@@ -28,7 +28,7 @@ public class GameManager {
     private int readyCount = 0;
     private Timer timer;
     private Runnable runnable;
-    public static final int TIME_LIMIT = 10;
+    public static final int TIME_LIMIT = 120;
     private static final int MAX_SCORE = 300;
     
     public GameManager() {

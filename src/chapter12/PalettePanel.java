@@ -84,7 +84,7 @@ public class PalettePanel extends JPanel implements Palette {
         makePenButton.apply(Color.YELLOW);
         makePenButton.apply(new Color(128, 255, 0)); //黄緑
         makePenButton.apply(new Color(0, 255, 255)); //水色
-        makePenButton.apply(new Color(33, 0, 4));
+        makePenButton.apply(new Color(160, 100, 70)); //茶色
 
         for (PenButton p : list) {
             p.addActionListener(e -> {
