@@ -43,9 +43,9 @@ public class SoundEffect {
     private final Sequencer acceptSE;
     private final Sequencer receiveSE;
     //private final Sequencer fanfareSE;
-    private final AudioClip gameStartSE;
-    private final AudioClip correctSE;
-    private final AudioClip uncorrectSE;
+    //private final AudioClip gameStartSE;
+    //private final AudioClip correctSE;
+    //private final AudioClip uncorrectSE;
     
     public SoundEffect() {
         //himawariBGM = makeFromPath(getClass().getResource("/Mediafile/himawari.mid"));
@@ -53,9 +53,9 @@ public class SoundEffect {
         //airsulgBGM = makeFromPath(getClass().getResource("/Mediafile/airsulg.mid"));
         //airsulgBGM.setLoopCount(Sequencer.LOOP_CONTINUOUSLY);
         //fanfareSE = makeFromPath(getClass().getResource("/Mediafile/futta-fanfare.mid"));
-        gameStartSE = new AudioClip(getClass().getResource("/Mediafile/by_chance.mp3").toString());
-        correctSE = new AudioClip(getClass().getResource("/Mediafile/crrect_answer2.mp3").toString());
-        uncorrectSE = new AudioClip(getClass().getResource("/Mediafile/blip01.mp3").toString());
+        //gameStartSE = new AudioClip(getClass().getResource("/Mediafile/by_chance.mp3").toString());
+        //correctSE = new AudioClip(getClass().getResource("/Mediafile/crrect_answer2.mp3").toString());
+        //uncorrectSE = new AudioClip(getClass().getResource("/Mediafile/blip01.mp3").toString());
         
         List<Message> temp = new ArrayList<>();
         
@@ -99,15 +99,18 @@ public class SoundEffect {
     }
     
     public void gameStartSE() {
-        gameStartSE.play();
+        //gameStartSE.play();
+        System.err.println("gameStart");
     }
     
     public void correctSE() {
-        correctSE.play();
+        //correctSE.play();
+        System.err.println("correct");
     }
     
     public void uncorrctSE() {
-        uncorrectSE.play();
+        //uncorrectSE.play();
+        System.err.println("uncorrect");
     }
     
     public void frontPageBGM() {
