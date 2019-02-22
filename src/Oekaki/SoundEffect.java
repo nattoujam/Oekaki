@@ -152,11 +152,11 @@ public class SoundEffect {
                 track.add(new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, l.channel, l.noteNumber, l.velocity), l.tick + 60));
             }
             
-            Synthesizer synthesizer = MidiSystem.getSynthesizer();
-            synthesizer.open();
+            //Synthesizer synthesizer = MidiSystem.getSynthesizer();
+            //synthesizer.open();
     
             seq.setSequence(sequence);
-            seq.getTransmitter().setReceiver(synthesizer.getReceiver());
+            //seq.getTransmitter().setReceiver(synthesizer.getReceiver());
         }
         catch (InvalidMidiDataException ex) {
             Logger.getLogger(SoundEffect.class.getName()).log(Level.SEVERE, null, ex);
