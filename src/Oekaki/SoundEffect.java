@@ -7,21 +7,26 @@ package Oekaki;
 
 import Oekaki.Packets.SEPacket;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.media.AudioClip;
+import javax.sound.midi.ControllerEventListener;
 import javax.sound.midi.InvalidMidiDataException;
+import javax.sound.midi.MetaEventListener;
 import javax.sound.midi.MidiEvent;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.MidiUnavailableException;
+import javax.sound.midi.Receiver;
 import javax.sound.midi.Sequence;
 import javax.sound.midi.Sequencer;
 import javax.sound.midi.ShortMessage;
 import javax.sound.midi.Synthesizer;
 import javax.sound.midi.Track;
+import javax.sound.midi.Transmitter;
 
 /**
  *
@@ -33,21 +38,21 @@ public class SoundEffect {
     public static final int CORRECT = 1;
     public static final int UNCORRECT = 2;
     
-    private final Sequencer himawariBGM;
-    private final Sequencer airsulgBGM;
+    //private final Sequencer himawariBGM;
+    //private final Sequencer airsulgBGM;
     private final Sequencer acceptSE;
     private final Sequencer receiveSE;
-    private final Sequencer fanfareSE;
+    //private final Sequencer fanfareSE;
     private final AudioClip gameStartSE;
     private final AudioClip correctSE;
     private final AudioClip uncorrectSE;
     
     public SoundEffect() {
-        himawariBGM = makeFromPath(getClass().getResource("/Mediafile/himawari.mid"));
-        himawariBGM.setLoopCount(Sequencer.LOOP_CONTINUOUSLY);
-        airsulgBGM = makeFromPath(getClass().getResource("/Mediafile/airsulg.mid"));
-        airsulgBGM.setLoopCount(Sequencer.LOOP_CONTINUOUSLY);
-        fanfareSE = makeFromPath(getClass().getResource("/Mediafile/futta-fanfare.mid"));
+        //himawariBGM = makeFromPath(getClass().getResource("/Mediafile/himawari.mid"));
+        //himawariBGM.setLoopCount(Sequencer.LOOP_CONTINUOUSLY);
+        //airsulgBGM = makeFromPath(getClass().getResource("/Mediafile/airsulg.mid"));
+        //airsulgBGM.setLoopCount(Sequencer.LOOP_CONTINUOUSLY);
+        //fanfareSE = makeFromPath(getClass().getResource("/Mediafile/futta-fanfare.mid"));
         gameStartSE = new AudioClip(getClass().getResource("/Mediafile/by_chance.mp3").toString());
         correctSE = new AudioClip(getClass().getResource("/Mediafile/crrect_answer2.mp3").toString());
         uncorrectSE = new AudioClip(getClass().getResource("/Mediafile/blip01.mp3").toString());
@@ -88,8 +93,9 @@ public class SoundEffect {
     }
     
     public void fanfareSE() {
-        fanfareSE.setTickPosition(0);
-        fanfareSE.start();
+        //fanfareSE.setTickPosition(0);
+        //fanfareSE.start();
+        System.err.println("fanfare");
     }
     
     public void gameStartSE() {
@@ -105,18 +111,21 @@ public class SoundEffect {
     }
     
     public void frontPageBGM() {
-        himawariBGM.setTickPosition(0);
-        himawariBGM.start();
+        //himawariBGM.setTickPosition(0);
+        //himawariBGM.start();
+        System.err.println("himawariBGM");
     }
     
     public void mainFrameBGM() {
-        airsulgBGM.setTickPosition(0);
-        airsulgBGM.start();
+        //airsulgBGM.setTickPosition(0);
+        //airsulgBGM.start();
+        System.err.println("sirsulgBGM");
     }
     
     public void stopBGM() {
-        if(himawariBGM.isRunning()) himawariBGM.stop();
-        if(airsulgBGM.isRunning()) airsulgBGM.stop();
+        //if(himawariBGM.isRunning()) himawariBGM.stop();
+        //if(airsulgBGM.isRunning()) airsulgBGM.stop();
+        System.err.println("stopBGM");
     }
      
     private Sequencer makeFromPath(URL path) {
